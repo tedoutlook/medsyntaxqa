@@ -28,11 +28,9 @@
         <a href="https://tedgrm.github.io/picomedsyntax/" target="_blank">
             Medsyntax PICO
         </a>
-        <form name="myForm" class="grayscale">
-            <input type="radio" name="myRadios" value="1" checked="checked"/>
-            <label for="html">color</label><br>
-            <input type="radio" name="myRadios" value="2"/>
-            <label for="html">greyscale</label><br>
+        <form name="myForm" id="colors" class="grayscale">
+            <label><input type="radio" name="myRadios" value="1" checked="checked"/><i>color</i></label><br>
+            <label><input type="radio" name="myRadios" value="2"/><i>greyscale</i></label><br>
         </form>
     </div>
 </div>
@@ -177,8 +175,6 @@
     var modalImg = document.getElementById("img01");
     var captionText = document.getElementById("caption");
     img.onclick = function () {
-        $("#medsyntax-target1").resizable();
-        $("#medsyntax-target1").resizable("destroy");
         modal.style.display = "block";
         modalImg.src = this.src;
         captionText.innerHTML = this.alt;
@@ -189,11 +185,9 @@
 
     // When the user clicks on <span> (x), close the modal
     span.onclick = function () {
-        $("#medsyntax-target1").resizable();
         modal.style.display = "none";
     }
     modal.onclick = function () {
-        $("#medsyntax-target1").resizable();
         modal.style.display = "none";
     }
 </script>
@@ -720,9 +714,7 @@
 
         }
 
-        makeResizableTarget(targetElementId);
         console.log('duration: ' + (Date.now() - time) + 'ms');
-
     }
 
     // Determine edit scope
@@ -799,23 +791,9 @@
         }
     }
 
-    function makeResizableTarget(targetElementId) {
-        $('#' + targetElementId).resizable();
-        $('#' + targetElementId).resizable("destroy");
-        if ($(window).width() > 1000) {
-            $("body").css("margin-left", "20px");
-            $('#' + targetElementId).resizable();
-            // console.log("resizable");
-            //    margin-right: 60px;
-            $('#' + targetElementId).css("margin-right", "160px");
-        }
-    }
-
     // Start edit on mouse down method
     function hoverMouseDown() {
         medsyntaxTargetWidth = $("#medsyntax-target1").width();
-        $("#medsyntax-target1").resizable();
-        $("#medsyntax-target1").resizable("destroy");
         $('.medsyntax-target div').off('mousemove');
 
         var text = $(".hover").text();
