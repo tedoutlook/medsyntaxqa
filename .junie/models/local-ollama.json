@@ -1,0 +1,11 @@
+{
+  "baseUrl": "http://localhost:11434/v1/responses",
+  "id": "gemma4:e4b",
+  "apiType": "OpenAIResponses",
+  "extraHeaders": {
+    "X-Custom-Source": "Junie"
+  },
+  "fasterModel": {
+    "id": "gemma4:e4b"
+  }
+}
