@@ -6,5 +6,9 @@
     "@playwright/test": "^1.60.0",
     "@types/node": "^25.9.1"
   },
-  "scripts": {}
+  "scripts": {
+    "pw-test": "playwright test",
+    "pw-test-ui": "playwright test --headed",
+    "pw-codegen": "playwright codegen http://localhost:63342/medsyntaxqa/index.html"
+  }
 }
