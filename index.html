@@ -195,8 +195,6 @@
     var stringLatestString = "";
     var time = Date.now();
     var latestInputTime = Date.now();
-    var rightBracketClose = false;
-    var leftBracketOpen = false;
 
     $(document).ready(function () {
         $(document).click(function (event) {
@@ -395,6 +393,7 @@
         }
         str = strCleanedSingleQuotes;
 
+        //TODO make case insensitive using regex
         str = str.replaceAll('AND(', 'AND (');
         str = str.replaceAll(')AND', ') AND');
         str = str.replaceAll(')OR', ') OR');
@@ -444,6 +443,7 @@
     var notRe = new RegExp('( NOT | not )', 'gi');
     var nearOpRe = new RegExp('(( \\w+[A-Za-z][\/][0-9]+)|( [A-Za-z][\/][0-9]+))', 'gi');
     var embaseRe = new RegExp('(([\/][A-Za-z])\\w+|([\:][A-Za-z])\\w+|([,][A-Za-z])\\w+|([.][A-Za-z])\\w+)', 'gi');
+    var bracketPairRe = new RegExp('[(\\[][^()\\[\\]]*?[^()\\[\\]]*[)\\]]', 'gm');
 
     var specialColon = "isfgsvkhADSFVMQEREGQ";
     var specialSlash = "n7k8nkumhngbwSAVRUTY";
@@ -486,6 +486,14 @@
 
     function booleanNotFunction(x) {
         x = "<div class=\"boolean not\">" + x + "</div>";
+        return x;
+    }
+
+    function bracketPairFunction(x) {
+        x = x.replaceAll("(", "<div class=\"brackets\"><div class=\"bracket-open\">(</div>");
+        x = x.replaceAll(")", "<div class=\"bracket-close\">)</div></div>");
+        x = x.replace(new RegExp('[(]', 'gi'), specialBracketOpen);
+        x = x.replace(new RegExp('[)]', 'gi'), specialBracketClose);
         return x;
     }
 
@@ -541,8 +549,16 @@
         });
 
         // brackets
-        str = str.replaceAll("(", "<div class=\"brackets\"><div class=\"bracket-open\">(</div>");
-        str = str.replaceAll(")", "<div class=\"bracket-close\">)</div></div>");
+        strPreBrackets = "";
+        while (str != strPreBrackets) {
+            strPreBrackets = str;
+
+            str = str.replaceAll(bracketPairRe, function (x) {
+                return bracketPairFunction(x);
+            });
+        }
+        str = str.replaceAll("(", "<div class=\"lonely-bracket-open\">(</div>");
+        str = str.replaceAll(")", "<div class=\"lonely-bracket-close\">)</div>");
 
         // square brackets
         str = str.replaceAll("[", "<div class=\"square-brackets\">[");
@@ -565,21 +581,27 @@
             str = str.replace(termRe, function (x) {
                 return termReFunction(x);
             }); //make stray words elements
+
             str = str.replace(termStrayRe, function (x) {
                 return termReFunction(x);
             }); //make stray words elements
+
             str = str.replace(termStrayExtraRe, function (x) {
                 return termReFunction(x);
             }); //make stray words elements
+
             str = str.replace(termStrayNumberRe, function (x) {
                 return termReFunction(x);
             }); //make stray words elements
+
             str = str.replace(termStraySpaceNumberRe, function (x) {
                 return termReFunction(x);
             }); //make stray words elements
+
             str = str.replace(termStraySpaceNumberSpaceRe, function (x) {
                 return termReFunction(x);
             }); //make stray words elements
+
             str = str.replace(termStrayNumberSpaceRe, function (x) {
                 return termReFunction(x);
             }); //make stray words elements

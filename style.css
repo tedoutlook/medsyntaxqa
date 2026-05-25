@@ -226,14 +226,10 @@ body {
     border-color: var(--color-one-base);
 }
 
-.medsyntax-target div.double-boolean-or {
-    background: darkred;
-    color: white;
-    padding-left: 5px;
-    padding-right: 5px;
-}
-
-.medsyntax-target div.double-boolean-and {
+.medsyntax-target div.double-boolean-or,
+.medsyntax-target div.double-boolean-and,
+.medsyntax-target div.lonely-bracket-open,
+.medsyntax-target div.lonely-bracket-close {
     background: darkred;
     color: white;
     padding-left: 5px;
