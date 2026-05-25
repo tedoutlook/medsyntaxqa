@@ -428,31 +428,31 @@
 
     //*** Syntax 'parser' code ***//
 
-    var quotedTermRe = new RegExp('([\"\'])(?:(?=(\\\\?))\\2.)*?\\1', 'gi');
-    var termRe = new RegExp('(\\\/div>([A-Z].{1,}?)<div)|(\\\/div>( +[A-Z].{1,}?)<div)', 'gi');
-    var termStrayRe = new RegExp('(\\/div>([0-9]{1,}?)\\w+<div)', 'gi');
-    var termStrayExtraRe = new RegExp('(\\/div>([0-9]{1,}?)(.{1,}?)<div)', 'gi');
-    var termStrayNumberRe = new RegExp('(\\/div>([0-9]{1,}?)<div)', 'gi');
-    var termStraySpaceNumberRe = new RegExp('(\\/div>[ ]([0-9]{1,}?)<div)', 'gi');
-    var termStraySpaceNumberSpaceRe = new RegExp('(\\/div>[ ]([0-9]{1,}?)[ ]<div)', 'gi');
-    var termStrayNumberSpaceRe = new RegExp('(\\/div>([0-9]{1,}?)[ ]<div)', 'gi');
-    var andRe = new RegExp('( AND | and )', 'gi');
-    var doubleAndRe = new RegExp('( AND AND | AND and | and AND | and and )', 'gi');
-    var orRe = new RegExp('( OR | or )', 'gi');
-    var doubleOrRe = new RegExp('( OR OR | OR or | or OR | or or )', 'gi');
-    var notRe = new RegExp('( NOT | not )', 'gi');
-    var nearOpRe = new RegExp('(( \\w+[A-Za-z][\/][0-9]+)|( [A-Za-z][\/][0-9]+))', 'gi');
-    var embaseRe = new RegExp('(([\/][A-Za-z])\\w+|([\:][A-Za-z])\\w+|([,][A-Za-z])\\w+|([.][A-Za-z])\\w+)', 'gi');
-    var bracketPairRe = new RegExp('[(][^()]*?[^()\\[]*[)]', 'gm');
-    var squareBracketPairRe = new RegExp('[\\[][^\\[\\]]*?[^\\[\\]]*[\\]]', 'gm');
+    const quotedTermRe = new RegExp('([\"\'])(?:(?=(\\\\?))\\2.)*?\\1', 'gi');
+    const termRe = new RegExp('(\\\/div>([A-Z].{1,}?)<div)|(\\\/div>( +[A-Z].{1,}?)<div)', 'gi');
+    const termStrayRe = new RegExp('(\\/div>([0-9]{1,}?)\\w+<div)', 'gi');
+    const termStrayExtraRe = new RegExp('(\\/div>([0-9]{1,}?)(.{1,}?)<div)', 'gi');
+    const termStrayNumberRe = new RegExp('(\\/div>([0-9]{1,}?)<div)', 'gi');
+    const termStraySpaceNumberRe = new RegExp('(\\/div>[ ]([0-9]{1,}?)<div)', 'gi');
+    const termStraySpaceNumberSpaceRe = new RegExp('(\\/div>[ ]([0-9]{1,}?)[ ]<div)', 'gi');
+    const termStrayNumberSpaceRe = new RegExp('(\\/div>([0-9]{1,}?)[ ]<div)', 'gi');
+    const andRe = new RegExp('( AND | and )', 'gi');
+    const doubleAndRe = new RegExp('( AND AND | AND and | and AND | and and )', 'gi');
+    const orRe = new RegExp('( OR | or )', 'gi');
+    const doubleOrRe = new RegExp('( OR OR | OR or | or OR | or or )', 'gi');
+    const notRe = new RegExp('( NOT | not )', 'gi');
+    const nearOpRe = new RegExp('(( \\w+[A-Za-z][\/][0-9]+)|( [A-Za-z][\/][0-9]+))', 'gi');
+    const embaseRe = new RegExp('(([\/][A-Za-z])\\w+|([\:][A-Za-z])\\w+|([,][A-Za-z])\\w+|([.][A-Za-z])\\w+)', 'gi');
+    const bracketPairRe = new RegExp('[(][^()]*?[^()\\[]*[)]', 'gm');
+    const squareBracketPairRe = new RegExp('[\\[][^\\[\\]]*?[^\\[\\]]*[\\]]', 'gm');
 
-    var specialColon = "isfgsvkhADSFVMQEREGQ";
-    var specialSlash = "n7k8nkumhngbwSAVRUTY";
-    var specialBracketOpen = "n7k8nk436ghgsd";
-    var specialBracketClose = "kh35fgsifuhgw7853t";
-    var specialSquareBracketOpen = "rye6446rbyryr";
-    var specialSquareBracketClose = "bnvcnjui67rr7";
-    var special = "___";
+    const specialColon = "isfgsvkhADSFVMQEREGQ";
+    const specialSlash = "n7k8nkumhngbwSAVRUTY";
+    const specialBracketOpen = "n7k8nk436ghgsd";
+    const specialBracketClose = "kh35fgsifuhgw7853t";
+    const specialSquareBracketOpen = "rye6446rbyryr";
+    const specialSquareBracketClose = "bnvcnjui67rr7";
+    const special = "___";
 
     function nearOpFunction(x) {
         x = "<div class=near>" + x + " " + "</div>";
