@@ -443,12 +443,15 @@
     var notRe = new RegExp('( NOT | not )', 'gi');
     var nearOpRe = new RegExp('(( \\w+[A-Za-z][\/][0-9]+)|( [A-Za-z][\/][0-9]+))', 'gi');
     var embaseRe = new RegExp('(([\/][A-Za-z])\\w+|([\:][A-Za-z])\\w+|([,][A-Za-z])\\w+|([.][A-Za-z])\\w+)', 'gi');
-    var bracketPairRe = new RegExp('[(\\[][^()\\[\\]]*?[^()\\[\\]]*[)\\]]', 'gm');
+    var bracketPairRe = new RegExp('[(][^()]*?[^()\\[]*[)]', 'gm');
+    var squareBracketPairRe = new RegExp('[\\[][^\\[\\]]*?[^\\[\\]]*[\\]]', 'gm');
 
     var specialColon = "isfgsvkhADSFVMQEREGQ";
     var specialSlash = "n7k8nkumhngbwSAVRUTY";
     var specialBracketOpen = "n7k8nk436ghgsd";
     var specialBracketClose = "kh35fgsifuhgw7853t";
+    var specialSquareBracketOpen = "rye6446rbyryr";
+    var specialSquareBracketClose = "bnvcnjui67rr7";
     var special = "___";
 
     function nearOpFunction(x) {
@@ -490,10 +493,18 @@
     }
 
     function bracketPairFunction(x) {
-        x = x.replaceAll("(", "<div class=\"brackets\"><div class=\"bracket-open\">(</div>");
-        x = x.replaceAll(")", "<div class=\"bracket-close\">)</div></div>");
-        x = x.replace(new RegExp('[(]', 'gi'), specialBracketOpen);
-        x = x.replace(new RegExp('[)]', 'gi'), specialBracketClose);
+        x = x.replace("(", "<div class=\"brackets\"><div class=\"bracket-open\">(</div>");
+        x = x.replace(")", "<div class=\"bracket-close\">)</div></div>");
+        x = x.replace('(', specialBracketOpen);
+        x = x.replace(')', specialBracketClose);
+        return x;
+    }
+
+    function squareBracketPairFunction(x) {
+        x = x.replace("[", "<div class=\"square-brackets\">[");
+        x = x.replace("]", "]</div>");
+        x = x.replace('[', specialSquareBracketOpen);
+        x = x.replace(']', specialSquareBracketClose);
         return x;
     }
 
@@ -556,13 +567,17 @@
             str = str.replaceAll(bracketPairRe, function (x) {
                 return bracketPairFunction(x);
             });
+
+            str = str.replaceAll(squareBracketPairRe, function (x) {
+                return squareBracketPairFunction(x);
+            });
         }
+
+        // lonely brackets
         str = str.replaceAll("(", "<div class=\"lonely-bracket-open\">(</div>");
         str = str.replaceAll(")", "<div class=\"lonely-bracket-close\">)</div>");
-
-        // square brackets
-        str = str.replaceAll("[", "<div class=\"square-brackets\">[");
-        str = str.replaceAll("]", "]</div>");
+        str = str.replaceAll("[", "<div class=\"lonely-square-bracket-open\">[</div>");
+        str = str.replaceAll("]", "<div class=\"lonely-square-bracket-close\">]</div>");
 
         str = str.replace(new RegExp(specialSlash, 'gi'), '/'); //un-special-fy
         str = str.replace(new RegExp(specialColon, 'gi'), ':'); //un-special-fy
@@ -572,6 +587,8 @@
         str = str.replace('class=quote-term', 'class=\"quote-term\"'); //un-special-fy quote
         str = str.replace(new RegExp(specialBracketOpen, 'gi'), '('); //un-special-fy
         str = str.replace(new RegExp(specialBracketClose, 'gi'), ')'); //un-special-fy
+        str = str.replace(new RegExp(specialSquareBracketOpen, 'gi'), '['); //un-special-fy
+        str = str.replace(new RegExp(specialSquareBracketClose, 'gi'), ']'); //un-special-fy
 
         // make stray words elements
         str = "<div id=\"search-string\" class=\"search-string\"><div class=\"dummy\"></div>" + str + "<div class=\"dummy\"></div></div>"

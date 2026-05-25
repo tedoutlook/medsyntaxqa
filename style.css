@@ -229,7 +229,9 @@ body {
 .medsyntax-target div.double-boolean-or,
 .medsyntax-target div.double-boolean-and,
 .medsyntax-target div.lonely-bracket-open,
-.medsyntax-target div.lonely-bracket-close {
+.medsyntax-target div.lonely-bracket-close,
+.medsyntax-target div.lonely-square-bracket-open,
+.medsyntax-target div.lonely-square-bracket-close {
     background: darkred;
     color: white;
     padding-left: 5px;
