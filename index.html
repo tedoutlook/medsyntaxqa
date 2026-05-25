@@ -408,13 +408,13 @@
         var hasError = false;
 
         // double quote check
-        quotesCount = (str.match(new RegExp('(\\")', 'gi')) || []).length;
+        quotesCount = (str.match(new RegExp('(")', 'gi')) || []).length;
         if (quotesCount % 2 != 0) {
             document.getElementById(warningQuotesElementId).hidden = false;
             hasError = true;
         }
         // single quote check
-        quotesCount = (str.match(new RegExp('(\\\')', 'gi')) || []).length;
+        quotesCount = (str.match(new RegExp('(\')', 'gi')) || []).length;
         if (quotesCount % 2 != 0) {
             document.getElementById(warningQuotesElementId).hidden = false;
             hasError = true;
