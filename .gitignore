@@ -3,7 +3,6 @@
 /.idea/*
 /.junie/memory/
 /node_modules/
-/package-lock.json
 
 # Playwright
 /test-results/
