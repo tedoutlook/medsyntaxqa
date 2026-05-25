@@ -393,13 +393,13 @@
         }
         str = strCleanedSingleQuotes;
 
-        //TODO make case insensitive using regex
-        str = str.replaceAll('AND(', 'AND (');
-        str = str.replaceAll(')AND', ') AND');
-        str = str.replaceAll(')OR', ') OR');
-        str = str.replaceAll('OR(', 'OR (');
-        str = str.replaceAll(')NOT', ') NOT');
-        str = str.replaceAll('NOT(', 'NOT (');
+        str = str.replaceAll(new RegExp(/AND\(/gi), 'AND (');
+        str = str.replaceAll(new RegExp(/\)AND/gi), ') AND');
+        str = str.replaceAll(new RegExp(/\)OR/gi), ') OR');
+        str = str.replaceAll(new RegExp(/OR\(/gi), 'OR (');
+        str = str.replaceAll(new RegExp(/\)NOT/gi), ') NOT');
+        str = str.replaceAll(new RegExp(/NOT\(/gi), 'NOT (');
+
         updateUrl('query', LZString.compressToEncodedURIComponent(str));
 
         document.getElementById("demo-button").hidden = true; // move somewhere else
