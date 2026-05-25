@@ -438,13 +438,13 @@
     var termStraySpaceNumberSpaceRe = new RegExp('(\\/div>[ ]([0-9]{1,}?)[ ]<div)', 'gi');
     var termStrayNumberSpaceRe = new RegExp('(\\/div>([0-9]{1,}?)[ ]<div)', 'gi');
     var andRe = new RegExp('( AND | and )', 'gi');
+    var doubleAndRe = new RegExp('( AND AND | AND and | and AND | and and )', 'gi');
     var orRe = new RegExp('( OR | or )', 'gi');
+    var doubleOrRe = new RegExp('( OR OR | OR or | or OR | or or )', 'gi');
     var notRe = new RegExp('( NOT | not )', 'gi');
     var nearOpRe = new RegExp('(( \\w+[A-Za-z][\/][0-9]+)|( [A-Za-z][\/][0-9]+))', 'gi');
     var embaseRe = new RegExp('(([\/][A-Za-z])\\w+|([\:][A-Za-z])\\w+|([,][A-Za-z])\\w+|([.][A-Za-z])\\w+)', 'gi');
-    var pubmedRe = new RegExp('([ ][w|n][0-9]+)', 'gi');
-    var embasePhrase = ":";
-    var embaseExact = "/";
+
     var specialColon = "isfgsvkhADSFVMQEREGQ";
     var specialSlash = "n7k8nkumhngbwSAVRUTY";
     var specialBracketOpen = "n7k8nk436ghgsd";
@@ -462,11 +462,6 @@
         return x;
     }
 
-    function pubmedFunction(x) {
-        x = "<div class=pubmed>" + x + "</div>";
-        return x;
-    }
-
     function booleanAndFunction(x) {
         x = "<div class=\"boolean and\">" + x + "</div>";
         return x;
@@ -474,6 +469,18 @@
 
     function booleanOrFunction(x) {
         x = "<div class=\"boolean or\">" + x + "</div>";
+        return x;
+    }
+
+    function doubleBooleanAndFunction(x) {
+        x = x.replace(new RegExp(' ', 'gi'), special);
+        x = "<div class=\"double-boolean-and\">" + x + "</div>";
+        return x;
+    }
+
+    function doubleBooleanOrFunction(x) {
+        x = x.replace(new RegExp(' ', 'gi'), special);
+        x = "<div class=\"double-boolean-or\">" + x + "</div>";
         return x;
     }
 
@@ -504,19 +511,31 @@
         str = str.replace(quotedTermRe, function (x) {
             return quotedTermToElement(x);
         });
+
         str = str.replace(embaseRe, function (x) {
             return embaseFunction(x);
         });
+
         str = str.replace(nearOpRe, function (x) {
             return nearOpFunction(x);
         });
-        // str = str.replace(pubmedRe, function (x) { return pubmedFunction(x); }); //TODO bestaat dit nog in PubMed? Of is alles met ~ tussen de []
+
+        str = str.replace(doubleAndRe, function (x) {
+            return doubleBooleanAndFunction(x);
+        });
+
+        str = str.replace(doubleOrRe, function (x) {
+            return doubleBooleanOrFunction(x);
+        });
+
         str = str.replace(andRe, function (x) {
             return booleanAndFunction(x);
         });
+
         str = str.replace(orRe, function (x) {
             return booleanOrFunction(x);
         });
+
         str = str.replace(notRe, function (x) {
             return booleanNotFunction(x);
         });
