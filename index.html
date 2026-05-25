@@ -446,13 +446,28 @@
     const bracketPairRe = new RegExp('[(][^()]*?[^()\\[]*[)]', 'gm');
     const squareBracketPairRe = new RegExp('[\\[][^\\[\\]]*?[^\\[\\]]*[\\]]', 'gm');
 
-    const specialColon = "isfgsvkhADSFVMQEREGQ";
-    const specialSlash = "n7k8nkumhngbwSAVRUTY";
-    const specialBracketOpen = "n7k8nk436ghgsd";
-    const specialBracketClose = "kh35fgsifuhgw7853t";
-    const specialSquareBracketOpen = "rye6446rbyryr";
-    const specialSquareBracketClose = "bnvcnjui67rr7";
+    const specialColon = str_Random();
+    const specialSlash = str_Random();
+    const specialBracketOpen = str_Random();
+    const specialBracketClose = str_Random();
+    const specialSquareBracketOpen = str_Random();
+    const specialSquareBracketClose = str_Random();
     const special = "___";
+
+    function str_Random() {
+        const length = 10;
+        let result = '';
+        const characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
+
+        // Loop to generate characters for the specified length
+        for (let i = 0; i < length; i++) {
+            const randomInd = Math.floor(Math.random() * characters.length);
+            result += characters.charAt(randomInd);
+        }
+
+        result = '@' + result + '@';
+        return result;
+    }
 
     function nearOpFunction(x) {
         x = "<div class=near>" + x + " " + "</div>";
@@ -624,7 +639,7 @@
             }); //make stray words elements
         }
 
-        console.log('duration: ' + (Date.now() - time) + 'ms');
+        console.log(str_Random() + ' duration: ' + (Date.now() - time) + 'ms');
         return str;
     }
 
