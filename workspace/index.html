@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="description" content="Query workspace using Medsyntax">
+    <title>MedsyntaxQA</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+</head>
+
+<body>
+    <ul id="myList" style="padding: 0"></ul>
+
+    <script>
+        function QueryObject(name, age, id) {
+            let qObject = Object.create(constructorObject);
+            qObject.type = "query";
+            qObject.name = name;
+            qObject.age = age;
+            qObject.iframeQueryString = "een niet per se unieke string"
+            qObject.id = id;
+            return qObject;
+        }
+
+        let constructorObject = {
+            speak: function () {
+                return "I am a cat"
+            }
+        }
+
+        var list = [];
+        list[0] = QueryObject("Cat", 54, "test_1");
+        list[1] = QueryObject("Cat", 54, "test_2");
+        list[2] = QueryObject("Cat", 54, "test_3");
+
+        list.forEach(queryFunction);
+
+        function addItemAfter(index) {
+            list.splice(1, 0, QueryObject("Cat", 54, "test_" + (index + 1))); // at index position 1, remove 0 elements, then add "baz" to that position
+            $("#myList").html("");
+            list.forEach(queryFunction);
+        }
+
+        function removeThisItem(index) {
+            delete list[index];
+            $("#myList").html("");
+            list.forEach(queryFunction);
+        }
+
+        function queryFunction(item, index, arr) {
+            // console.log(item);
+            var $li = $("<li>", { id: "li_" + item.id, "class": "item", });
+            // $li.click(function () { /* ... */ });
+            $li.append("<iframe id=\"page_is_fresh_" + index + "\"" +
+                " src=\"../index.html?ws=" + index + "\"" +
+                "scrolling=\"no\"" +
+                " sandbox=\"allow-same-origin allow-scripts allow-top-navigation\"" +
+                "></iframe>");
+            $li.append("<button onclick=\"removeThisItem(" + index + ")\">Remove #todo insert query-title here</button>")
+            $li.append("<button onclick=\"addItemAfter(" + index + ")\">Add</button>")
+            $("#myList").append($li);
+            // console.log($li);
+            // console.log($li.children("iframe")[0]);
+        }
+
+    </script>
+</body>
