@@ -1,0 +1,5 @@
+.dropdown-menu,
+.medsyntax-title,
+.manual {
+    display: none !important;
+}

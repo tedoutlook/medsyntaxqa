@@ -505,7 +505,7 @@ p {
     background-color: darkorange;
 }
 
-.dropdown {
+.dropdown-menu {
     position: relative;
     display: inline-block;
     margin: 5px;
@@ -529,7 +529,7 @@ p {
     display: block;
 }
 
-.dropdown a:hover {
+.dropdown-menu a:hover {
     background-color: #ddd;
 }
 

@@ -11,7 +11,7 @@
 
 <body>
 <!-- #region Menu -->
-<div class="dropdown">
+<div class="dropdown-menu">
     <button onclick="myFunction()" class="dropbtn">menu</button>
     <div id="myDropdown" class="dropdown-content">
         <a href="mailto:m.verleg@mzh.nl" target="_blank">
@@ -79,7 +79,7 @@
     fixing these in very long strings may impact medsyntax performance.</p>
 
 <div id="medsyntax" class="medsyntax">
-    <h3 id="medsyntax-title">medsyntax:</h3>
+    <h3 id="medsyntax-title" class="medsyntax-title">medsyntax:</h3>
     <button id="demo-button" onclick="demoClickFunction()">demo button (click to demo)</button>
     <p id="demo2" hidden="hidden">demo tekst uit variabele</p>
 
@@ -232,6 +232,26 @@
 
         var input = document.getElementById("query-input1");
         textAreaAdjust(input);
+
+        // load iframe css
+        const urlParams = new URLSearchParams(window.location.search);
+        const ws = urlParams.get('ws');
+
+        // indien workspace (iframe)
+        if (ws) {
+            console.log('ws: ' + ws);
+            var cssId = 'myCss';  // you could encode the css path itself to generate id..
+            if (!document.getElementById(cssId)) {
+                var head = document.getElementsByTagName('head')[0];
+                var link = document.createElement('link');
+                link.id = cssId;
+                link.rel = 'stylesheet';
+                link.type = 'text/css';
+                link.href = '/workspace/iframe.css';
+                link.media = 'all';
+                head.appendChild(link);
+            }
+        }
     });
 
     function textAreaAdjust(element, updateHeight, targetWidth) {
