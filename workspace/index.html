@@ -13,11 +13,12 @@
 <ul id="myList" style="padding: 0"></ul>
 
 <script>
-    function QueryObject(id) {
+    function QueryObject(id, src, iframeQueryString) {
         let qObject = Object.create(constructorObject);
         qObject.type = "query";
-        qObject.iframeQueryString = "een niet per se unieke string"
+        qObject.iframeQueryString = iframeQueryString;
         qObject.id = id;
+        qObject.src = src;
         return qObject;
     }
 
@@ -31,15 +32,26 @@
     list.forEach(queryFunction);
 
     function addItemAfter(index) {
+        list.forEach(getQuery);
         list.splice(1, 0, QueryObject("test_" + (index + 1))); // at index position 1, remove 0 elements, then add "baz" to that position
         $("#myList").html("");
         list.forEach(queryFunction);
     }
 
     function removeThisItem(index) {
+        list.forEach(getQuery);
         delete list[index];
         $("#myList").html("");
         list.forEach(queryFunction);
+    }
+
+    function getQuery(item, index) {
+        var src = document.getElementById("page_is_fresh_" + index).contentWindow.location.href;
+        item.src = src;
+        console.log(item.src);
+        item.iframeQueryString = src.split("?ws=" + index)[1];
+        console.log(item.iframeQueryString);
+        return item;
     }
 
     function queryFunction(item, index) {
@@ -56,9 +68,7 @@
         $("#myList").append($li);
         // console.log($li);
         // console.log($li.children("iframe")[0]);
-        iframeResize({license: 'GPLv3', log: true}, '#page_is_fresh_' + index);
+        iframeResize({license: 'GPLv3', log: false}, '#page_is_fresh_' + index);
     }
-
-    //     TODO iframe resizer: https://iframe-resizer.com/frameworks/jquery/
 </script>
 </body>
