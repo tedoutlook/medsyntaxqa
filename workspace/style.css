@@ -4,8 +4,10 @@ body {
 
 iframe {
     /*width: 100%; is nodig voor auto adjust van iframe grootte*/
-    width: 100%;
+    /*width: 100%;*/
     border-width: 0;
+    width: 1px;
+    min-width: 100%;
 }
 
 li.item {
