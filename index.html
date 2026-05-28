@@ -350,7 +350,7 @@
             const messageData = {
                 status: "success",
                 type: "updateUrl",
-                payload: ws + "%index%" + name + "=" + value
+                payload: ws + "%index%" + name + "=" + queryParams.toString()
             };
 
             // Use postMessage to send data to the parent window
@@ -673,7 +673,7 @@
             }); //make stray words elements
         }
 
-        console.log(str_Random() + ' syntaxParser duration: ' + (Date.now() - time) + 'ms');
+        // console.log(str_Random() + ' syntaxParser duration: ' + (Date.now() - time) + 'ms');
         return str;
     }
 
@@ -819,7 +819,7 @@
 
         }
 
-        console.log(str_Random() + ' afterParseFunction duration: ' + (Date.now() - time) + 'ms');
+        // console.log(str_Random() + ' afterParseFunction duration: ' + (Date.now() - time) + 'ms');
     }
 
     // Determine edit scope
