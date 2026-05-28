@@ -55,12 +55,16 @@
     }
 
     function queryFunction(item, index) {
+        var iframeQueryString = '';
+        if (item.iframeQueryString) {
+            iframeQueryString = item.iframeQueryString;
+        }
         // console.log(item);
         var $li = $("<li>", {id: "li_" + item.id, "class": "item",});
         $li.append("<iframe" +
             " id=\"page_is_fresh_" + index + "\"" +
             " name=\"iframe" + index + "\"" +
-            " src=\"../index.html?ws=" + index + "\"" +
+            " src=\"../index.html?ws=" + index + iframeQueryString + "\"" +
             " sandbox=\"allow-same-origin allow-scripts allow-top-navigation\"" +
             "></iframe>");
         $li.append("<button onclick=\"removeThisItem(" + index + ")\">Remove #todo insert query-title here</button>")
