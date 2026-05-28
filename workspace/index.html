@@ -13,8 +13,13 @@
 <ul id="myList" style="padding: 0"></ul>
 
 <script>
-    // Parent communication script will go here
+    function pad(num, size) {
+        num = num.toString();
+        while (num.length < size) num = "0" + num;
+        return num;
+    }
 
+    // Parent communication script will go here
     window.addEventListener('message', function (event) {
         // Security check: Always check the origin of the sender to prevent cross-site attacks!
         if (event.origin !== window.location.origin) {
@@ -28,6 +33,12 @@
 
         const data = event.data;
         console.log("Message received from iframe:", data);
+        var queryString = event.data.payload;
+        var indexPadded = pad(queryString.split('%index%')[0], 9);
+        console.log(indexPadded);
+        var qsValue = queryString.split('%index%query=')[1];
+        console.log(qsValue);
+        updateUrl(indexPadded, qsValue);
     });
 
     function getRandomColor() {
@@ -45,6 +56,7 @@
 
         // Set new or modify existing page value
         queryParams.set(name, value);
+        queryParams.sort();
 
         // Replace current querystring with the new one
         history.replaceState(null, null, "?" + queryParams.toString());
