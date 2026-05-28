@@ -13,6 +13,23 @@
 <ul id="myList" style="padding: 0"></ul>
 
 <script>
+    // Parent communication script will go here
+
+    window.addEventListener('message', function (event) {
+        // Security check: Always check the origin of the sender to prevent cross-site attacks!
+        if (event.origin !== window.location.origin) {
+            console.error("Message received from unauthorized origin!");
+            return;
+        }
+
+        if (event.data.type !== "updateUrl") {
+            return;
+        }
+
+        const data = event.data;
+        console.log("Message received from iframe:", data);
+    });
+
     function getRandomColor() {
         var letters = '0123456789ABCDEF';
         var color = '#';

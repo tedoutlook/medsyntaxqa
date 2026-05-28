@@ -192,10 +192,11 @@
 </script>
 
 <script>
-    var medsyntaxTargetWidth;
-    var stringLatestString = "";
-    var time = Date.now();
-    var latestInputTime = Date.now();
+    let medsyntaxTargetWidth;
+    let stringLatestString = "";
+    let time = Date.now();
+    let latestInputTime = Date.now();
+    let ws = null;
 
     $(document).ready(function () {
         $(document).click(function (event) {
@@ -235,7 +236,7 @@
         textAreaAdjust(input);
 
         const urlParams = new URLSearchParams(window.location.search);
-        const ws = urlParams.get('ws');
+        ws = urlParams.get('ws');
         // indien workspace (iframe)
         if (ws) {
             // console.log('ws: ' + ws);
@@ -343,6 +344,18 @@
         // Replace current querystring with the new one
         history.replaceState(null, null, "?" + queryParams.toString());
         history.pushState(null, null, "?" + queryParams.toString());
+
+        // send to parent window if iframe
+        if (ws) {
+            const messageData = {
+                status: "success",
+                type: "updateUrl",
+                payload: ws + "%index%" + name + "=" + value
+            };
+
+            // Use postMessage to send data to the parent window
+            window.parent.postMessage(messageData);
+        }
     }
 
     function demoClickFunction() {
