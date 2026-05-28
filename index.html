@@ -238,7 +238,7 @@
         const urlParams = new URLSearchParams(window.location.search);
         const ws = urlParams.get('ws');
 
-        // indien workspace (iframe )
+        // indien workspace (iframe)
         if (ws) {
             console.log('ws: ' + ws);
             var cssId = 'myCss';  // you could encode the css path itself to generate id..
@@ -248,7 +248,7 @@
                 link.id = cssId;
                 link.rel = 'stylesheet';
                 link.type = 'text/css';
-                link.href = '/iframe.css';
+                link.href = 'iframe.css';
                 link.media = 'all';
                 head.appendChild(link);
             }
