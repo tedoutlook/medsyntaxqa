@@ -76,14 +76,20 @@
             " src=\"../index.html?ws=" + index + iframeQueryString + "\"" +
             " sandbox=\"allow-same-origin allow-scripts allow-top-navigation\"" +
             "></iframe>");
-        $li.append("<button onclick=\"removeThisItem(" + index + ")\">Remove #todo insert query-title here</button>")
+        $li.append("<button onclick=\"removeThisItem(" + index + ")\">Remove</button>")
         $li.append("<button onclick=\"addItemAfter(" + index + ")\">Add</button>")
         $("#myList").append($li);
 
         if (item.color === undefined) {
             item.color = getRandomColor();
         }
-        $('#li_item_' + index).css({'border': item.color, 'border-style': 'solid', 'border-width': '10px'});
+        $('#li_item_' + index).css({
+            'border': item.color,
+            'border-style': 'solid',
+            'border-width': '10px',
+            'border-radius': '20px',
+            'padding': '10px 0px 10px 10px'
+        });
 
         iframeResize({license: 'GPLv3', log: false}, '#page_is_fresh_' + index);
     }
