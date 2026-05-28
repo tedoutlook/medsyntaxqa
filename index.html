@@ -234,14 +234,13 @@
         var input = document.getElementById("query-input1");
         textAreaAdjust(input);
 
-        // load iframe css
         const urlParams = new URLSearchParams(window.location.search);
         const ws = urlParams.get('ws');
-
         // indien workspace (iframe)
         if (ws) {
             console.log('ws: ' + ws);
-            var cssId = 'myCss';  // you could encode the css path itself to generate id..
+            // load iframe css
+            var cssId = 'iframeCss';
             if (!document.getElementById(cssId)) {
                 var head = document.getElementsByTagName('head')[0];
                 var link = document.createElement('link');

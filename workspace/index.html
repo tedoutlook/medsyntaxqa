@@ -22,6 +22,18 @@
         return color;
     }
 
+    function updateUrl(name, value) {
+        // Construct URLSearchParams object instance from current URL querystring
+        let queryParams = new URLSearchParams(window.location.search);
+
+        // Set new or modify existing page value
+        queryParams.set(name, value);
+
+        // Replace current querystring with the new one
+        history.replaceState(null, null, "?" + queryParams.toString());
+        history.pushState(null, null, "?" + queryParams.toString());
+    }
+
     function QueryObject(src, iframeQueryString, color) {
         let qObject = Object.create(constructorObject);
         qObject.type = "query";
@@ -68,7 +80,7 @@
         if (item.iframeQueryString) {
             iframeQueryString = item.iframeQueryString;
         }
-        console.log(item);
+        // console.log(item);
         var $li = $("<li>", {id: "li_item_" + index, "class": "item",});
         $li.append("<iframe" +
             " id=\"page_is_fresh_" + index + "\"" +
