@@ -3,11 +3,10 @@ body {
 }
 
 iframe {
-    /*width: 100%; is nodig voor auto adjust van iframe grootte*/
-    /*width: 100%;*/
-    border-width: 0;
+    /*width en min-width nodig voor auto adjust van iframe grootte*/
     width: 1px;
-    min-width: 100%;
+    min-width: 98%;
+    /*min-width: 97vw;*/
 }
 
 li.item {

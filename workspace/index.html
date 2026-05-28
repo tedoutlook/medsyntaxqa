@@ -13,27 +13,36 @@
 <ul id="myList" style="padding: 0"></ul>
 
 <script>
-    function QueryObject(id, src, iframeQueryString) {
+    function getRandomColor() {
+        var letters = '0123456789ABCDEF';
+        var color = '#';
+        for (var i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
+
+    function QueryObject(src, iframeQueryString, color) {
         let qObject = Object.create(constructorObject);
         qObject.type = "query";
         qObject.iframeQueryString = iframeQueryString;
-        qObject.id = id;
         qObject.src = src;
+        qObject.color = color;
         return qObject;
     }
 
     let constructorObject = {}
 
     var list = [];
-    list[0] = QueryObject("test_1");
-    list[1] = QueryObject("test_2");
-    list[2] = QueryObject("test_3");
+    list[0] = QueryObject();
+    list[1] = QueryObject();
+    list[2] = QueryObject();
 
     list.forEach(queryFunction);
 
     function addItemAfter(index) {
         list.forEach(getQuery);
-        list.splice(1, 0, QueryObject("test_" + (index + 1))); // at index position 1, remove 0 elements, then add "baz" to that position
+        list.splice(index + 1, 0, QueryObject());
         $("#myList").html("");
         list.forEach(queryFunction);
     }
@@ -48,9 +57,9 @@
     function getQuery(item, index) {
         var src = document.getElementById("page_is_fresh_" + index).contentWindow.location.href;
         item.src = src;
-        console.log(item.src);
+        // console.log(item.src);
         item.iframeQueryString = src.split("?ws=" + index)[1];
-        console.log(item.iframeQueryString);
+        // console.log(item.iframeQueryString);
         return item;
     }
 
@@ -59,8 +68,8 @@
         if (item.iframeQueryString) {
             iframeQueryString = item.iframeQueryString;
         }
-        // console.log(item);
-        var $li = $("<li>", {id: "li_" + item.id, "class": "item",});
+        console.log(item);
+        var $li = $("<li>", {id: "li_item_" + index, "class": "item",});
         $li.append("<iframe" +
             " id=\"page_is_fresh_" + index + "\"" +
             " name=\"iframe" + index + "\"" +
@@ -70,8 +79,12 @@
         $li.append("<button onclick=\"removeThisItem(" + index + ")\">Remove #todo insert query-title here</button>")
         $li.append("<button onclick=\"addItemAfter(" + index + ")\">Add</button>")
         $("#myList").append($li);
-        // console.log($li);
-        // console.log($li.children("iframe")[0]);
+
+        if (item.color === undefined) {
+            item.color = getRandomColor();
+        }
+        $('#li_item_' + index).css({'border': item.color, 'border-style': 'solid', 'border-width': '10px'});
+
         iframeResize({license: 'GPLv3', log: false}, '#page_is_fresh_' + index);
     }
 </script>
