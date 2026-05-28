@@ -238,7 +238,8 @@
         const ws = urlParams.get('ws');
         // indien workspace (iframe)
         if (ws) {
-            console.log('ws: ' + ws);
+            // console.log('ws: ' + ws);
+
             // load iframe css
             var cssId = 'iframeCss';
             if (!document.getElementById(cssId)) {
@@ -439,7 +440,7 @@
             document.getElementById(warningQuotesElementId).hidden = false;
             hasError = true;
         }
-        afterParseFuntion(syntaxParser(str), targetElementId, hasError, savedLatestInputTime);
+        afterParseFunction(syntaxParser(str), targetElementId, hasError, savedLatestInputTime);
         if (grayscale) {
             $("#search-string").css("filter", "grayscale(100%)");
         }
@@ -659,11 +660,11 @@
             }); //make stray words elements
         }
 
-        console.log(str_Random() + ' duration: ' + (Date.now() - time) + 'ms');
+        console.log(str_Random() + ' syntaxParser duration: ' + (Date.now() - time) + 'ms');
         return str;
     }
 
-    function afterParseFuntion(str, targetElementId, hasError, savedLatestInputTime) {
+    function afterParseFunction(str, targetElementId, hasError, savedLatestInputTime) {
         res = str;
         document.getElementById(targetElementId).innerHTML = res;
 
@@ -805,7 +806,7 @@
 
         }
 
-        console.log('duration: ' + (Date.now() - time) + 'ms');
+        console.log(str_Random() + ' afterParseFunction duration: ' + (Date.now() - time) + 'ms');
     }
 
     // Determine edit scope

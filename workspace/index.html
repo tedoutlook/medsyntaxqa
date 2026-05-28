@@ -71,7 +71,7 @@
         item.src = src;
         // console.log(item.src);
         item.iframeQueryString = src.split("?ws=" + index)[1];
-        // console.log(item.iframeQueryString);
+        console.log(item.iframeQueryString);
         return item;
     }
 
@@ -80,7 +80,9 @@
         if (item.iframeQueryString) {
             iframeQueryString = item.iframeQueryString;
         }
+
         // console.log(item);
+
         var $li = $("<li>", {id: "li_item_" + index, "class": "item",});
         $li.append("<iframe" +
             " id=\"page_is_fresh_" + index + "\"" +
