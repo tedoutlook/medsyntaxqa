@@ -129,6 +129,9 @@
             if (item.iframeQueryString !== 'Q') {
                 iframeQueryString = item.iframeQueryString;
             }
+            if (item.iframeQueryString.substring(0, 1) === '&') {
+                iframeQueryString = item.iframeQueryString.substring(1);
+            }
         }
 
         console.log(item);
