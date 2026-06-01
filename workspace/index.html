@@ -40,7 +40,7 @@
         // console.log('queryString: ' + queryString);
         var indexPadded = pad(queryString.split('%index%')[0], padLength);
         console.log('indexPadded: ' + indexPadded);
-        var qsValue = queryString.split('%index%query=')[1];
+        var qsValue = queryString.split('%index%')[1];
         console.log('qsValue: ' + qsValue);
         updateUrl(indexPadded + 'iframequery', qsValue);
     });
