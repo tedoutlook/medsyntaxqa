@@ -95,16 +95,22 @@
         let queryParams = new URLSearchParams(window.location.search);
 
         // Set new or modify existing page value
-        for (let item of list) {
-            console.log(index);
-            queryParams.delete(pad(index, padLength) + 'iframequery');
+        for (let i = 0; i < list.length; i++) {
+            console.log('index:', i);
+            let deletableString = pad(i, padLength) + 'iframequery';
+            console.log('deletableString:', deletableString);
+            queryParams.delete(deletableString);
         }
+
+        console.log('workspace queryParams:', queryParams.toString());
 
         // Replace current querystring with the new one
         history.replaceState(null, null, "?" + queryParams.toString());
         history.pushState(null, null, "?" + queryParams.toString());
 
         delete list[index];
+        list = $.grep(list, n => n == 0 || n);
+        console.log('list after delete', list);
         list.forEach(queryFunction);
     }
 
@@ -120,7 +126,7 @@
     function queryFunction(item, index) {
         let iframeQueryString = '';
         if (item.iframeQueryString) {
-            if (item.iframeQueryString.length !== 'Q') {
+            if (item.iframeQueryString !== 'Q') {
                 iframeQueryString = item.iframeQueryString;
             }
         }
@@ -167,7 +173,9 @@
         params.forEach((value, key) => {
             // console.log('Key:', key);
             if (key.includes('iframequery')) {
-                // console.log("Found key:", key);
+                console.log("Found key:", key);
+                console.log("Value", value)
+
                 // Construct URLSearchParams object instance from current URL querystring
                 let queryParams = new URLSearchParams(window.location.search);
 
