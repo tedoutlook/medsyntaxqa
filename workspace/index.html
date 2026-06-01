@@ -37,10 +37,11 @@
         const data = event.data;
         console.log("Message received from iframe:", data);
         var queryString = event.data.payload;
+        // console.log('queryString: ' + queryString);
         var indexPadded = pad(queryString.split('%index%')[0], padLength);
         console.log('indexPadded: ' + indexPadded);
         var qsValue = queryString.split('%index%query=')[1];
-        // console.log('qsValue: ' + qsValue);
+        console.log('qsValue: ' + qsValue);
         updateUrl(indexPadded + 'iframequery', qsValue);
     });
 
@@ -117,9 +118,11 @@
     }
 
     function queryFunction(item, index) {
-        var iframeQueryString = '';
-        if (item.iframeQueryString && item.iframeQueryString.length !== 'Q') {
-            iframeQueryString = item.iframeQueryString;
+        let iframeQueryString = '';
+        if (item.iframeQueryString) {
+            if (item.iframeQueryString.length !== 'Q') {
+                iframeQueryString = item.iframeQueryString;
+            }
         }
 
         console.log(item);
@@ -128,7 +131,7 @@
         $li.append("<iframe" +
             " id=\"page_is_fresh_" + index + "\"" +
             " name=\"iframe" + index + "\"" +
-            " src=\"../index.html?ws=" + index + iframeQueryString + "\"" +
+            " src=\"../index.html?ws=" + index + '&' + iframeQueryString + "\"" +
             " sandbox=\"allow-same-origin allow-scripts allow-top-navigation\"" +
             "></iframe>");
         $li.append("<button onclick=\"removeThisItem(" + index + ")\">Remove</button>")
@@ -164,7 +167,7 @@
         params.forEach((value, key) => {
             // console.log('Key:', key);
             if (key.includes('iframequery')) {
-                console.log("Found key:", key);
+                // console.log("Found key:", key);
                 // Construct URLSearchParams object instance from current URL querystring
                 let queryParams = new URLSearchParams(window.location.search);
 
@@ -178,7 +181,11 @@
                 if (value.length > 0) {
                     hasQuery = true;
                 }
-                if (value !== 'Q') {
+
+                var qsCheck = new RegExp('^[0-9]{' + padLength + '}iframequery');
+                // console.log('qsCheck: ' + qsCheck.test(key));
+
+                if (value !== 'Q' && qsCheck.test(key)) {
                     list.push(QueryObject(
                         null,
                         LZString.decompressFromEncodedURIComponent(value),

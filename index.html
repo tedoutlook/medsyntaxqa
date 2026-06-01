@@ -338,6 +338,7 @@
     function updateUrl(name, value) {
         // Construct URLSearchParams object instance from current URL querystring
         let queryParams = new URLSearchParams(window.location.search);
+        console.log('queryParams:', queryParams.toString());
 
         // Set new or modify existing page value
         queryParams.set(name, value);
@@ -348,12 +349,20 @@
 
         // send to parent window if iframe
         if (ws) {
+            // remove ws parameters from querystring
+            while (queryParams.get('ws') != null) {
+                queryParams.delete('ws');
+            }
+
+            console.log('queryParams without ws:', queryParams.toString());
+
             const messageData = {
                 status: "success",
                 type: "updateUrl",
                 payload: ws + "%index%" + name + "=" + queryParams.toString()
             };
 
+            console.log('Sending updateUrl message:', messageData);
             // Use postMessage to send data to the parent window
             window.parent.postMessage(messageData);
         }
