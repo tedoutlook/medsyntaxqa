@@ -58,13 +58,18 @@
 <br class="iframe-hide">
 <!-- #endregion -->
 
-<input type="text" id="query-title1" class="query-title" name="query-title1" size="100"
-       onkeyup='updateTitle("query-title1")' placeholder="Please input a title for your query here...">
+<label for="query-title1" hidden="hidden">query title</label>
+<input type="text" id="query-title1" class="query-title"
+       name="query-title1" size="100"
+       onkeyup='updateTitle("query-title1")'
+       placeholder="Please input a title for your query here...">
 <button id="clear-button" onclick="clearButtonFunc()">
     Click here to clear query
 </button>
 <br>
-<textarea id="query-input1" class="query-input" name="query-input" rows="10" cols="100"
+<label class for="query-input1" hidden="hidden">query</label>
+<textarea id="query-input1" class="query-input"
+          name="query-input" rows="10" cols="100"
           onkeyup='syntaxCheck("query-input1","medsyntax-target1")'
           onchange='syntaxCheck("query-input1","medsyntax-target1")'
           onclick='syntaxCheck("query-input1","medsyntax-target1")'
@@ -90,6 +95,7 @@
 <br class="iframe-hide">
 
 <!-- The button used to copy the query -->
+<label for="myQueryInput" hidden="hidden">myQueryInput</label>
 <input type="text" value="Hello World" id="myQueryInput" hidden="hidden">
 
 <div class="tooltip">
@@ -100,6 +106,7 @@
 </div>
 
 <!-- The button used to copy the link -->
+<label for="myLinkInput" hidden="hidden">myLinkInput</label>
 <input type="text" value="Hello World" id="myLinkInput" hidden="hidden">
 
 <div class="tooltip">
@@ -139,7 +146,7 @@
 <!-- The Modal -->
 <div id="myModal" class="modal">
     <span class="close">&times;</span>
-    <img class="modal-content" id="img01">
+    <img class="modal-content" id="img01" alt="animated manual for scope based editor">
     <div id="caption"></div>
 </div>
 
