@@ -213,8 +213,11 @@
 
         if (location.search.length > 1) {
             let param1 = getParameterByName('query');
-            $("#query-input1").val(LZString.decompressFromEncodedURIComponent(param1));
-            syntaxCheck("query-input1", "medsyntax-target1");
+            let queryInput1 = $("#query-input1")
+            queryInput1.val(LZString.decompressFromEncodedURIComponent(param1));
+            if (queryInput1.val() !== "") {
+                syntaxCheck("query-input1", "medsyntax-target1");
+            }
         }
 
         // with quotes to replace:
