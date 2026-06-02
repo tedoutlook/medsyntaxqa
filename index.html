@@ -195,6 +195,7 @@
 <script>
     let medsyntaxTargetWidth;
     let stringLatestString = "";
+    let queryParamsLatestParams;
     let time = Date.now();
     let latestInputTime = Date.now();
     let ws = null;
@@ -330,6 +331,7 @@
     }
 
     function updateTitle(titleId) {
+        console.log('updateTitle');
         var title = document.getElementById(titleId).value;
         document.title = 'Medsyntax: ' + title;
         updateUrl('querytitle', LZString.compressToEncodedURIComponent(title));
@@ -338,10 +340,18 @@
     function updateUrl(name, value) {
         // Construct URLSearchParams object instance from current URL querystring
         let queryParams = new URLSearchParams(window.location.search);
-        console.log('queryParams:', queryParams.toString());
+        // console.log('queryParams:', queryParams.toString());
 
         // Set new or modify existing page value
         queryParams.set(name, value);
+
+        if (queryParamsLatestParams && queryParamsLatestParams.toString() === queryParams.toString()) {
+            console.log('queryParamsLatestParams === queryParams');
+            return false;
+        } else {
+            queryParamsLatestParams = queryParams;
+        }
+
 
         // Replace current querystring with the new one
         history.replaceState(null, null, "?" + queryParams.toString());
@@ -404,6 +414,7 @@
     //*** Syntax highlighter code ***//
 
     function syntaxCheck(sourceElementId, targetElementId, force) {
+        console.log('syntaxCheck');
         if ($('#dynamic-input').is(":visible") && !force) {
             return false;
         }
@@ -411,7 +422,8 @@
         latestInputTime = Date.now();
         var savedLatestInputTime = latestInputTime;
         var str = document.getElementById(sourceElementId).value;
-        if (stringLatestString == str && !force) {
+
+        if (stringLatestString && stringLatestString === str && !force) {
             return false;
         } else {
             stringLatestString = str;
@@ -683,7 +695,7 @@
             }); //make stray words elements
         }
 
-        // console.log(str_Random() + ' syntaxParser duration: ' + (Date.now() - time) + 'ms');
+        console.log(str_Random() + ' syntaxParser duration: ' + (Date.now() - time) + 'ms');
         return str;
     }
 
@@ -829,7 +841,7 @@
 
         }
 
-        // console.log(str_Random() + ' afterParseFunction duration: ' + (Date.now() - time) + 'ms');
+        console.log(str_Random() + ' afterParseFunction duration: ' + (Date.now() - time) + 'ms');
     }
 
     // Determine edit scope
