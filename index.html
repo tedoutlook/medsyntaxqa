@@ -149,15 +149,14 @@
     var prev = null;
     for (var i = 0; i < rad.length; i++) {
         rad[i].addEventListener('change', function () {
-            // (prev) ? console.log(prev.value) : null;
             if (this !== prev) {
                 prev = this;
             }
-            if (this.value == 1) {
+            if (this.value === 1) {
                 // console.log(this.value)
                 $("#search-string").css("filter", "");
                 grayscale = false;
-            } else if (this.value == 2) {
+            } else if (this.value === 2) {
                 // console.log(this.value)
                 $("#search-string").css("filter", "grayscale(100%)");
                 grayscale = true;
@@ -436,14 +435,14 @@
         }
 
         strCleanedDoubleQuotes = str.replace(/[“]|[”]|[″]|[‶]/g, '"');
-        if (str != strCleanedDoubleQuotes) {
+        if (str !== strCleanedDoubleQuotes) {
             alert("Your input query included one (or some) unexpected types of double quote signs. "
                 + "These quote signs have been replaced with regular double quote signs.");
         }
         str = strCleanedDoubleQuotes;
 
         strCleanedSingleQuotes = str.replace(/[‘]|[’]|[′]|[‵]/g, '\'');
-        if (str != strCleanedSingleQuotes) {
+        if (str !== strCleanedSingleQuotes) {
             alert("Your input query included one (or some) unexpected types of single quote signs. "
                 + "These quote signs have been replaced with regular single quote signs.");
         }
@@ -465,13 +464,13 @@
 
         // double quote check
         quotesCount = (str.match(new RegExp('(")', 'gi')) || []).length;
-        if (quotesCount % 2 != 0) {
+        if (quotesCount % 2 !== 0) {
             document.getElementById(warningQuotesElementId).hidden = false;
             hasError = true;
         }
         // single quote check
         quotesCount = (str.match(new RegExp('(\')', 'gi')) || []).length;
-        if (quotesCount % 2 != 0) {
+        if (quotesCount % 2 !== 0) {
             document.getElementById(warningQuotesElementId).hidden = false;
             hasError = true;
         }
@@ -632,7 +631,7 @@
 
         // brackets
         strPreBrackets = "";
-        while (str != strPreBrackets) {
+        while (str !== strPreBrackets) {
             strPreBrackets = str;
 
             str = str.replaceAll(bracketPairRe, function (x) {
@@ -664,7 +663,7 @@
         // make stray words elements
         str = "<div id=\"search-string\" class=\"search-string\"><div class=\"dummy\"></div>" + str + "<div class=\"dummy\"></div></div>"
         strOld = "";
-        while (str != strOld) {
+        while (str !== strOld) {
             strOld = str;
             str = str.replace(termRe, function (x) {
                 return termReFunction(x);
@@ -740,10 +739,11 @@
 
         //TODO does this "savedLatestInputTime != latestInputTime" thing even work?
         var hasAmbiguousAndError = false;
-        if (hasError == false) {
+
+        if (hasError === false) {
             // ambiguous ANDs and ORs
-            var ambiguousAndLen = $(".brackets .boolean.and").each(function () {
-                if (hasAmbiguousAndError == true | savedLatestInputTime != latestInputTime) {
+            $(".brackets .boolean.and").each(function () {
+                if (hasAmbiguousAndError === true || savedLatestInputTime !== latestInputTime) {
                     return false; // breaks
                 }
                 $(this).siblings(".or").each(function () {
@@ -753,8 +753,8 @@
                 )
             });
 
-            var ambiguousAndLen = $(".search-string .boolean.and").each(function () {
-                if (hasAmbiguousAndError == true | savedLatestInputTime != latestInputTime) {
+            $(".search-string .boolean.and").each(function () {
+                if (hasAmbiguousAndError === true || savedLatestInputTime !== latestInputTime) {
                     return false; // breaks
                 }
                 $(this).siblings(".or").each(function () {
@@ -768,11 +768,11 @@
                 // add boolean error classes
 
                 $(".brackets .boolean.or").each(function () {
-                    if (savedLatestInputTime != latestInputTime) {
+                    if (savedLatestInputTime !== latestInputTime) {
                         return false; // breaks
                     }
                     $(this).siblings(".and").each(function () {
-                        if (savedLatestInputTime != latestInputTime) {
+                        if (savedLatestInputTime !== latestInputTime) {
                             return false; // breaks
                         }
                         $(this).addClass("boolean-error-and");
@@ -780,11 +780,11 @@
                 });
 
                 $(".brackets .boolean.and").each(function () {
-                    if (savedLatestInputTime != latestInputTime) {
+                    if (savedLatestInputTime !== latestInputTime) {
                         return false; // breaks
                     }
                     $(this).siblings(".or").each(function () {
-                        if (savedLatestInputTime != latestInputTime) {
+                        if (savedLatestInputTime !== latestInputTime) {
                             return false; // breaks
                         }
                         $(this).addClass("boolean-error-or");
@@ -792,11 +792,11 @@
                 });
 
                 $(".search-string .boolean.or").each(function () {
-                    if (savedLatestInputTime != latestInputTime) {
+                    if (savedLatestInputTime !== latestInputTime) {
                         return false; // breaks
                     }
                     $(this).siblings(".and").each(function () {
-                        if (savedLatestInputTime != latestInputTime) {
+                        if (savedLatestInputTime !== latestInputTime) {
                             return false; // breaks
                         }
                         $(this).addClass("boolean-error-and");
@@ -804,11 +804,11 @@
                 });
 
                 $(".search-string .boolean.and").each(function () {
-                    if (savedLatestInputTime != latestInputTime) {
+                    if (savedLatestInputTime !== latestInputTime) {
                         return false; // breaks
                     }
                     $(this).siblings(".or").each(function () {
-                        if (savedLatestInputTime != latestInputTime) {
+                        if (savedLatestInputTime !== latestInputTime) {
                             return false; // breaks
                         }
                         $(this).addClass("boolean-error-or");
@@ -828,7 +828,7 @@
             var elementForHover;
             $('#' + targetElementId + ' .search-string div').mousemove(function (event) {
 
-                if (elementForHover != this) {
+                if (elementForHover !== this) {
                     if ($(this).hasClass('hover')) {
                         return false;
                     }
@@ -908,7 +908,7 @@
 
         $("#dynamic-input").val(text);
         $("#dynamic-input").on('keydown', function (e) {
-            if (e.key == 'Enter') {
+            if (e.key === 'Enter') {
                 onEnterDynamicInput();
             }
         });
@@ -928,14 +928,14 @@
 
         // double quote check
         quotesCount = (str.match(new RegExp('(\\")', 'gi')) || []).length;
-        if (quotesCount % 2 != 0) {
+        if (quotesCount % 2 !== 0) {
             alert("number of \" error: please fix before pressing Enter");
             $("#entered-text").remove();
             return false;
         }
         // single quote check
         quotesCount = (str.match(new RegExp('(\\\')', 'gi')) || []).length;
-        if (quotesCount % 2 != 0) {
+        if (quotesCount % 2 !== 0) {
             alert("number of \' error: please fix before pressing Enter");
             $("#entered-text").remove();
             return false;
