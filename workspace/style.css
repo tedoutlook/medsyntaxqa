@@ -12,3 +12,7 @@ iframe {
 li.item {
     list-style-type: none;
 }
+
+.first-button{
+    margin-left: 20px;
+}
