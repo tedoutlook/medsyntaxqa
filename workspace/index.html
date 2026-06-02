@@ -189,10 +189,6 @@
                 history.replaceState(null, null, "?" + queryParams.toString());
                 history.pushState(null, null, "?" + queryParams.toString());
 
-                if (value.length > 0) {
-                    hasQuery = true;
-                }
-
                 var qsCheck = new RegExp('^[0-9]{' + padLength + '}iframequery');
                 // console.log('qsCheck: ' + qsCheck.test(key));
 
@@ -202,6 +198,8 @@
                         LZString.decompressFromEncodedURIComponent(value),
                         getRandomColor()
                     ))
+
+                    hasQuery = true;
                 }
                 // console.log(list);
             }
