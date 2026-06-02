@@ -155,15 +155,16 @@
     var rad = document.myForm.myRadios;
     var prev = null;
     for (var i = 0; i < rad.length; i++) {
+        // console.log('rad:', rad[i].value);
         rad[i].addEventListener('change', function () {
             if (this !== prev) {
                 prev = this;
             }
-            if (this.value === 1) {
+            if (this.value === '1') {
                 // console.log(this.value)
                 $("#search-string").css("filter", "");
                 grayscale = false;
-            } else if (this.value === 2) {
+            } else if (this.value === '2') {
                 // console.log(this.value)
                 $("#search-string").css("filter", "grayscale(100%)");
                 grayscale = true;
@@ -832,8 +833,8 @@
             }
         }
 
-        if (squareBracketOpenCount == squareBracketCloseCount
-            && bracketOpenCount == bracketCloseCount
+        if (squareBracketOpenCount === squareBracketCloseCount
+            && bracketOpenCount === bracketCloseCount
             && document.getElementById(warningQuotesElementId).hidden) {
             var elementForHover;
             $('#' + targetElementId + ' .search-string div').mousemove(function (event) {
