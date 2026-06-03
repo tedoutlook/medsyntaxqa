@@ -1,6 +1,8 @@
-.dropdown-menu,
-.iframe-hide,
-.medsyntax-title,
-.manual {
-    display: none !important;
+body.ws-iframe-body {
+    .dropdown-menu,
+    .iframe-hide,
+    .medsyntax-title,
+    .manual {
+        display: none !important;
+    }
 }
