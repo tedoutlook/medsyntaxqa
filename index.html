@@ -93,7 +93,7 @@
     <button id="demo-button" onclick="demoClickFunction()">demo button (click to demo)</button>
     <p id="demo2" hidden="hidden">demo tekst uit variabele</p>
 
-    <div id="medsyntax-target1" class="medsyntax-target">Please input search query in text area.</div>
+    <div id="medsyntax-target1" class="medsyntax-target"></div>
 </div>
 <br class="iframe-hide">
 
@@ -270,9 +270,9 @@
                 head.appendChild(link);
             }
 
-            if (ws !== '0') {
-                $('#demo-button').hide();
-            }
+            // if (ws !== '0') {
+            //     $('#demo-button').hide();
+            // }
         }
     });
 
@@ -328,8 +328,9 @@
         // syntaxCheck("query-input1", "medsyntax-target1");
         updateUrl('query', '');
         document.getElementById("demo-button").hidden = false;
-        $('#medsyntax-target1').text('Please input search query in text area.');
+        $('#medsyntax-target1').text('');
     }
+
 
     function copyLinkFunction() {
         const copyText = document.getElementById("myLinkInput");
