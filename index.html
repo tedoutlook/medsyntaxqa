@@ -47,10 +47,10 @@
     // Close the dropdown if the user clicks outside of it
     window.onclick = function (event) {
         if (!event.target.matches('.dropbtn')) {
-            var dropdowns = document.getElementsByClassName("dropdown-content");
-            var i;
+            const dropdowns = document.getElementsByClassName("dropdown-content");
+            let i;
             for (i = 0; i < dropdowns.length; i++) {
-                var openDropdown = dropdowns[i];
+                const openDropdown = dropdowns[i];
                 if (openDropdown.classList.contains('show')) {
                     openDropdown.classList.remove('show');
                 }
@@ -154,10 +154,10 @@
 </div>
 
 <script>
-    var grayscale = false;
-    var rad = document.myForm.myRadios;
-    var prev = null;
-    for (var i = 0; i < rad.length; i++) {
+    let grayscale = false;
+    const rad = document.myForm.myRadios;
+    let prev = null;
+    for (let i = 0; i < rad.length; i++) {
         // console.log('rad:', rad[i].value);
         rad[i].addEventListener('change', function () {
             if (this !== prev) {
@@ -178,12 +178,12 @@
 
 <script>
     // Get the modal
-    var modal = document.getElementById("myModal");
+    const modal = document.getElementById("myModal");
 
     // Get the image and insert it inside the modal - use its "alt" text as a caption
-    var img = document.getElementById("myImg");
-    var modalImg = document.getElementById("img01");
-    var captionText = document.getElementById("caption");
+    const img = document.getElementById("myImg");
+    const modalImg = document.getElementById("img01");
+    const captionText = document.getElementById("caption");
     img.onclick = function () {
         modal.style.display = "block";
         modalImg.src = this.src;
@@ -191,7 +191,7 @@
     }
 
     // Get the <span> element that closes the modal
-    var span = document.getElementsByClassName("close")[0];
+    const span = document.getElementsByClassName("close")[0];
 
     // When the user clicks on <span> (x), close the modal
     span.onclick = function () {
@@ -212,7 +212,7 @@
 
     $(document).ready(function () {
         $(document).click(function (event) {
-            var $target = $(event.target);
+            const $target = $(event.target);
             if (!$target.closest('#dynamic-input').length &&
                 $('#dynamic-input').is(":visible")) {
                 syntaxCheck("query-input1", "medsyntax-target1", true);
@@ -247,7 +247,7 @@
             $(".hover").removeClass('hover');
         });
 
-        var input = document.getElementById("query-input1");
+        const input = document.getElementById("query-input1");
         textAreaAdjust(input);
 
         const urlParams = new URLSearchParams(window.location.search);
@@ -257,10 +257,10 @@
             // console.log('ws: ' + ws);
 
             // load iframe css
-            var cssId = 'iframeCss';
+            const cssId = 'iframeCss';
             if (!document.getElementById(cssId)) {
-                var head = document.getElementsByTagName('head')[0];
-                var link = document.createElement('link');
+                const head = document.getElementsByTagName('head')[0];
+                const link = document.createElement('link');
                 link.id = cssId;
                 link.rel = 'stylesheet';
                 link.type = 'text/css';
@@ -302,19 +302,19 @@
     }
 
     function copyQueryFunction() {
-        var copyText = document.getElementById("myQueryInput");
+        const copyText = document.getElementById("myQueryInput");
         copyText.value = "test";
         copyText.value = document.getElementById("query-input1").value;
         copyText.select();
         copyText.setSelectionRange(0, 99999);
         navigator.clipboard.writeText(copyText.value);
 
-        var tooltip = document.getElementById("myQueryTooltip");
+        const tooltip = document.getElementById("myQueryTooltip");
         tooltip.innerHTML = "Copied: " + copyText.value;
     }
 
     function outQueryFunc() {
-        var tooltip = document.getElementById("myQueryTooltip");
+        const tooltip = document.getElementById("myQueryTooltip");
         tooltip.innerHTML = "Copy query to clipboard";
     }
 
@@ -327,25 +327,25 @@
     }
 
     function copyLinkFunction() {
-        var copyText = document.getElementById("myLinkInput");
+        const copyText = document.getElementById("myLinkInput");
         copyText.value = "test";
         copyText.value = window.location.href;
         copyText.select();
         copyText.setSelectionRange(0, 99999);
         navigator.clipboard.writeText(copyText.value);
 
-        var tooltip = document.getElementById("myLinkTooltip");
+        const tooltip = document.getElementById("myLinkTooltip");
         tooltip.innerHTML = "Copied: " + copyText.value;
     }
 
     function outLinkFunc() {
-        var tooltip = document.getElementById("myLinkTooltip");
+        const tooltip = document.getElementById("myLinkTooltip");
         tooltip.innerHTML = "Copy link to clipboard";
     }
 
     function updateTitle(titleId) {
         console.log('updateTitle');
-        var title = document.getElementById(titleId).value;
+        const title = document.getElementById(titleId).value;
         document.title = 'Medsyntax: ' + title;
         updateUrl('querytitle', LZString.compressToEncodedURIComponent(title));
     }
@@ -401,19 +401,19 @@
             url = window.location.href;
         }
         name = name.replace(/[\[\]]/g, "\\$&");
-        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        const regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
             results = regex.exec(url);
         if (!results) return null;
         if (!results[2]) return '';
         return decodeURIComponent(results[2].replace(/\+/g, " "));
-    };
+    }
 
-    var warningBracketCloseElementId = "warning-bracket-close";
-    var warningBracketOpenElementId = "warning-bracket-open";
-    var warningSquareBracketCloseElementId = "warning-square-bracket-close";
-    var warningSquareBracketOpenElementId = "warning-square-bracket-open";
-    var warningQuotesElementId = "warning-quotes";
-    var warningAmbiguousAndElementId = "warning-ambiguous-and";
+    const warningBracketCloseElementId = "warning-bracket-close";
+    const warningBracketOpenElementId = "warning-bracket-open";
+    const warningSquareBracketCloseElementId = "warning-square-bracket-close";
+    const warningSquareBracketOpenElementId = "warning-square-bracket-open";
+    const warningQuotesElementId = "warning-quotes";
+    const warningAmbiguousAndElementId = "warning-ambiguous-and";
 
     function hideWarnings() {
         document.getElementById(warningBracketCloseElementId).hidden = true;
@@ -433,8 +433,8 @@
         }
 
         latestInputTime = Date.now();
-        var savedLatestInputTime = latestInputTime;
-        var str = document.getElementById(sourceElementId).value;
+        const savedLatestInputTime = latestInputTime;
+        let str = document.getElementById(sourceElementId).value;
 
         if (stringLatestString && stringLatestString === str && !force) {
             return false;
@@ -448,14 +448,14 @@
             str = str.replace(/  +/g, ' ');
         }
 
-        strCleanedDoubleQuotes = str.replace(/[“]|[”]|[″]|[‶]/g, '"');
+        const strCleanedDoubleQuotes = str.replace(/[“”″‶]/g, '"');
         if (str !== strCleanedDoubleQuotes) {
             alert("Your input query included one (or some) unexpected types of double quote signs. "
                 + "These quote signs have been replaced with regular double quote signs.");
         }
         str = strCleanedDoubleQuotes;
 
-        strCleanedSingleQuotes = str.replace(/[‘]|[’]|[′]|[‵]/g, '\'');
+        const strCleanedSingleQuotes = str.replace(/[‘’′‵]/g, '\'');
         if (str !== strCleanedSingleQuotes) {
             alert("Your input query included one (or some) unexpected types of single quote signs. "
                 + "These quote signs have been replaced with regular single quote signs.");
@@ -474,10 +474,10 @@
         document.getElementById("demo-button").hidden = true; // move somewhere else
 
         hideWarnings();
-        var hasError = false;
+        let hasError = false;
 
         // double quote check
-        quotesCount = (str.match(new RegExp('(")', 'gi')) || []).length;
+        let quotesCount = (str.match(new RegExp('(")', 'gi')) || []).length;
         if (quotesCount % 2 !== 0) {
             document.getElementById(warningQuotesElementId).hidden = false;
             hasError = true;
@@ -644,7 +644,7 @@
         });
 
         // brackets
-        strPreBrackets = "";
+        let strPreBrackets = "";
         while (str !== strPreBrackets) {
             strPreBrackets = str;
 
@@ -676,7 +676,7 @@
 
         // make stray words elements
         str = "<div id=\"search-string\" class=\"search-string\"><div class=\"dummy\"></div>" + str + "<div class=\"dummy\"></div></div>"
-        strOld = "";
+        let strOld = "";
         while (str !== strOld) {
             strOld = str;
             str = str.replace(termRe, function (x) {
@@ -713,15 +713,14 @@
     }
 
     function afterParseFunction(str, targetElementId, hasError, savedLatestInputTime) {
-        res = str;
-        document.getElementById(targetElementId).innerHTML = res;
+        document.getElementById(targetElementId).innerHTML = str;
 
         // WARNINGS
         time = Date.now();
 
         // bracket warnings ( and )
-        bracketOpenCount = (str.match(new RegExp('(\\()', 'gi')) || []).length;
-        bracketCloseCount = (str.match(new RegExp('(\\))', 'gi')) || []).length;
+        const bracketOpenCount = (str.match(new RegExp('(\\()', 'gi')) || []).length;
+        const bracketCloseCount = (str.match(new RegExp('(\\))', 'gi')) || []).length;
         if (bracketOpenCount > bracketCloseCount) {
             document.getElementById(warningBracketOpenElementId).hidden = false;
             hasError = true;
@@ -736,8 +735,8 @@
         }
 
         // bracket warnings [ and ]
-        squareBracketOpenCount = (str.match(new RegExp('(\\[)', 'gi')) || []).length;
-        squareBracketCloseCount = (str.match(new RegExp('(\\])', 'gi')) || []).length;
+        const squareBracketOpenCount = (str.match(new RegExp('(\\[)', 'gi')) || []).length;
+        const squareBracketCloseCount = (str.match(new RegExp('(])', 'gi')) || []).length;
         if (squareBracketOpenCount > squareBracketCloseCount) {
             document.getElementById(warningSquareBracketOpenElementId).hidden = false;
             hasError = true;
@@ -752,7 +751,7 @@
         }
 
         //TODO does this "savedLatestInputTime != latestInputTime" thing even work?
-        var hasAmbiguousAndError = false;
+        let hasAmbiguousAndError = false;
 
         if (hasError === false) {
             // ambiguous ANDs and ORs
@@ -830,16 +829,13 @@
                 });
 
                 document.getElementById(warningAmbiguousAndElementId).hidden = false;
-                hasError = true;
-
-
             }
         }
 
         if (squareBracketOpenCount === squareBracketCloseCount
             && bracketOpenCount === bracketCloseCount
             && document.getElementById(warningQuotesElementId).hidden) {
-            var elementForHover;
+            let elementForHover;
             $('#' + targetElementId + ' .search-string div').mousemove(function (event) {
 
                 if (elementForHover !== this) {
@@ -863,7 +859,7 @@
         $('#' + targetElementId + ' div').removeClass('hover');
         $('#' + targetElementId + ' div').off('mousedown');
 
-        var selectionForHover = $(element);
+        let selectionForHover = $(element);
         if ($(element).parent().hasClass('square-brackets')) {
             element = $(element).parent();
         }
@@ -915,7 +911,7 @@
         medsyntaxTargetWidth = $("#medsyntax-target1").width();
         $('.medsyntax-target div').off('mousemove');
 
-        var text = $(".hover").text();
+        const text = $(".hover").text();
         $(".hover").wrapAll("<div class='newInputTarget' />");
         $(".medsyntax-target .newInputTarget")
             .replaceWith('<textarea id="dynamic-input" class="dynamic-input"/>');
@@ -927,7 +923,7 @@
             }
         });
 
-        var input = document.getElementById("dynamic-input");
+        const input = document.getElementById("dynamic-input");
         input.addEventListener("keyup", function () {
             textAreaAdjust(this, true, medsyntaxTargetWidth);
         });
@@ -935,20 +931,20 @@
     }
 
     function onEnterDynamicInput() {
-        var dyText = $("#dynamic-input").val();
+        const dyText = $("#dynamic-input").val();
         $("#dynamic-input").val(dyText.replace(/\n/g, ' '));
         $("#dynamic-input").append('<div id="entered-text">' + " " + $("#dynamic-input").val() + " " + '</div>');
-        var str = $("#medsyntax-target1").text();
+        let str = $("#medsyntax-target1").text();
 
         // double quote check
-        quotesCount = (str.match(new RegExp('(\\")', 'gi')) || []).length;
+        let quotesCount = (str.match(new RegExp('(")', 'gi')) || []).length;
         if (quotesCount % 2 !== 0) {
             alert("number of \" error: please fix before pressing Enter");
             $("#entered-text").remove();
             return false;
         }
         // single quote check
-        quotesCount = (str.match(new RegExp('(\\\')', 'gi')) || []).length;
+        quotesCount = (str.match(new RegExp('(\')', 'gi')) || []).length;
         if (quotesCount % 2 !== 0) {
             alert("number of \' error: please fix before pressing Enter");
             $("#entered-text").remove();
@@ -956,8 +952,8 @@
         }
 
         // bracket warnings ( and )
-        bracketOpenCount = (str.match(new RegExp('(\\()', 'gi')) || []).length;
-        bracketCloseCount = (str.match(new RegExp('(\\))', 'gi')) || []).length;
+        const bracketOpenCount = (str.match(new RegExp('(\\()', 'gi')) || []).length;
+        const bracketCloseCount = (str.match(new RegExp('(\\))', 'gi')) || []).length;
         if (bracketOpenCount > bracketCloseCount) {
             alert("( or ) bracket error: please fix before pressing Enter");
             $("#entered-text").remove();
@@ -975,8 +971,8 @@
         }
 
         // bracket warnings [ and ]
-        squareBracketOpenCount = (str.match(new RegExp('(\\[)', 'gi')) || []).length;
-        squareBracketCloseCount = (str.match(new RegExp('(\\])', 'gi')) || []).length;
+        const squareBracketOpenCount = (str.match(new RegExp('(\\[)', 'gi')) || []).length;
+        const squareBracketCloseCount = (str.match(new RegExp('(])', 'gi')) || []).length;
         if (squareBracketOpenCount > squareBracketCloseCount) {
             alert("[ or ] bracket error: please fix before pressing Enter");
             $("#entered-text").remove();
@@ -1004,5 +1000,3 @@
 </script>
 
 </body>
-
-</html>
