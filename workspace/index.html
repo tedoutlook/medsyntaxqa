@@ -37,19 +37,19 @@
 
         const data = event.data;
         console.log("Message received from iframe:", data);
-        var queryString = event.data.payload;
+        const queryString = event.data.payload;
         // console.log('queryString: ' + queryString);
-        var indexPadded = pad(queryString.split('%index%')[0], padLength);
+        const indexPadded = pad(queryString.split('%index%')[0], padLength);
         console.log('indexPadded: ' + indexPadded);
-        var qsValue = queryString.split('%index%')[1];
+        const qsValue = queryString.split('%index%')[1];
         console.log('qsValue: ' + qsValue);
         updateUrl(indexPadded + 'iframequery', qsValue);
     });
 
     function getRandomColor() {
-        var letters = '0123456789ABCDEF';
-        var color = '#';
-        for (var i = 0; i < 6; i++) {
+        const letters = '0123456789ABCDEF';
+        let color = '#';
+        for (let i = 0; i < 6; i++) {
             color += letters[Math.floor(Math.random() * 16)];
         }
         return color;
@@ -79,7 +79,7 @@
 
     let constructorObject = {}
 
-    var list = [];
+    let list = [];
 
     function addItemAfter(index) {
         list.forEach(getQuery);
@@ -110,13 +110,13 @@
         history.pushState(null, null, "?" + queryParams.toString());
 
         delete list[index];
-        list = $.grep(list, n => n == 0 || n);
+        list = $.grep(list, n => n === 0 || n);
         console.log('list after delete', list);
         list.forEach(queryFunction);
     }
 
     function getQuery(item, index) {
-        var src = document.getElementById("page_is_fresh_" + index).contentWindow.location.href;
+        const src = document.getElementById("page_is_fresh_" + index).contentWindow.location.href;
         item.src = src;
         // console.log(item.src);
         item.iframeQueryString = src.split("?ws=" + index)[1];
@@ -137,7 +137,7 @@
 
         console.log(item);
 
-        var $li = $("<li>", {id: "li_item_" + index, "class": "item",});
+        const $li = $("<li>", {id: "li_item_" + index, "class": "item",});
         $li.append("<iframe" +
             " id=\"page_is_fresh_" + index + "\"" +
             " name=\"iframe" + index + "\"" +
@@ -190,7 +190,7 @@
                 history.replaceState(null, null, "?" + queryParams.toString());
                 history.pushState(null, null, "?" + queryParams.toString());
 
-                var qsCheck = new RegExp('^[0-9]{' + padLength + '}iframequery');
+                const qsCheck = new RegExp('^[0-9]{' + padLength + '}iframequery');
                 // console.log('qsCheck: ' + qsCheck.test(key));
 
                 if (value !== 'Q' && qsCheck.test(key)) {
