@@ -9,6 +9,6 @@
   "scripts": {
     "pw-test": "playwright test",
     "pw-test-ui": "playwright test --headed",
-    "pw-codegen": "playwright codegen http://localhost:63342/medsyntaxqa/index.html"
+    "pw-codegen": "playwright codegen"
   }
 }
