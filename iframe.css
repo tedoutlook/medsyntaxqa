@@ -1,4 +1,7 @@
 body.ws-iframe-body {
+    /*.tooltip,*/
+    #copy-link-button,
+    /*#copy-query-button,*/
     .dropdown-menu,
     .iframe-hide,
     .medsyntax-title,

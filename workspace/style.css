@@ -13,6 +13,10 @@ li.item {
     list-style-type: none;
 }
 
-.first-button{
+.first-button {
     margin-left: 20px;
+}
+
+#myList {
+    margin-top: 10px;
 }
