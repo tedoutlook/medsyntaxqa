@@ -8,6 +8,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
     <script src="../scripts/iframe-resizer/js/iframeResizer.js"></script>
     <script src="../scripts/lzstring.js"></script>
+    <script src="../scripts/key-commands.js"></script>
 </head>
 
 <body>
@@ -36,13 +37,13 @@
         }
 
         const data = event.data;
-        console.log("Message received from iframe:", data);
+        // console.log("Message received from iframe:", data);
         const queryString = event.data.payload;
         // console.log('queryString: ' + queryString);
         const indexPadded = pad(queryString.split('%index%')[0], padLength);
-        console.log('indexPadded: ' + indexPadded);
+        // console.log('indexPadded: ' + indexPadded);
         const qsValue = queryString.split('%index%')[1];
-        console.log('qsValue: ' + qsValue);
+        // console.log('qsValue: ' + qsValue);
         updateUrl(indexPadded + 'iframequery', qsValue);
     });
 
@@ -97,13 +98,13 @@
 
         // Set new or modify existing page value
         for (let i = 0; i < list.length; i++) {
-            console.log('index:', i);
+            // console.log('index:', i);
             let deletableString = pad(i, padLength) + 'iframequery';
-            console.log('deletableString:', deletableString);
+            // console.log('deletableString:', deletableString);
             queryParams.delete(deletableString);
         }
 
-        console.log('workspace queryParams:', queryParams.toString());
+        // console.log('workspace queryParams:', queryParams.toString());
 
         // Replace current querystring with the new one
         history.replaceState(null, null, "?" + queryParams.toString());
@@ -120,7 +121,7 @@
         item.src = src;
         // console.log(item.src);
         item.iframeQueryString = src.split("?ws=" + index)[1];
-        console.log('iframeQueryString: ' + item.iframeQueryString);
+        // console.log('iframeQueryString: ' + item.iframeQueryString);
         return item;
     }
 
@@ -135,7 +136,7 @@
             }
         }
 
-        console.log(item);
+        // console.log(item);
 
         const $li = $("<li>", {id: "li_item_" + index, "class": "item",});
         $li.append("<iframe" +
@@ -162,6 +163,8 @@
         });
 
         iframeResize({license: 'GPLv3', log: false}, '#page_is_fresh_' + index);
+        var iframe = document.getElementById('page_is_fresh_' + index);
+        iframe.contentWindow.addEventListener('keydown', handleKeyDownFromIframe);
     }
 
     $(document).ready(function () {
@@ -171,14 +174,14 @@
         // 2. Create a URLSearchParams object
         const params = new URLSearchParams(queryString);
 
-        console.log("--- Iterating Through Parameters ---");
+        // console.log("--- Iterating Through Parameters ---");
         let hasQuery = false;
         // Iterate and run a function on each parameter
         params.forEach((value, key) => {
             // console.log('Key:', key);
             if (key.includes('iframequery')) {
-                console.log("Found key:", key);
-                console.log("Value", value)
+                // console.log("Found key:", key);
+                // console.log("Value", value)
 
                 // Construct URLSearchParams object instance from current URL querystring
                 let queryParams = new URLSearchParams(window.location.search);

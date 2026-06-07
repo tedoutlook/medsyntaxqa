@@ -216,7 +216,7 @@
             if (!$target.closest('#dynamic-input').length &&
                 $('#dynamic-input').is(":visible")) {
                 syntaxCheck("query-input1", "medsyntax-target1", true);
-                console.log("click");
+                // console.log("click");
             }
         });
 
@@ -350,7 +350,7 @@
     }
 
     function updateTitle(titleId) {
-        console.log('updateTitle');
+        // console.log('updateTitle');
         const title = document.getElementById(titleId).value;
         document.title = 'Medsyntax: ' + title;
         updateUrl('querytitle', LZString.compressToEncodedURIComponent(title));
@@ -383,7 +383,7 @@
                 queryParams.delete('ws');
             }
 
-            console.log('queryParams without ws:', queryParams.toString());
+            // console.log('queryParams without ws:', queryParams.toString());
 
             const messageData = {
                 status: "success",
@@ -391,7 +391,7 @@
                 payload: ws + "%index%" + queryParams.toString()
             };
 
-            console.log('Sending updateUrl message:', messageData);
+            // console.log('Sending updateUrl message:', messageData);
             // Use postMessage to send data to the parent window
             window.parent.postMessage(messageData);
         }
@@ -433,7 +433,7 @@
     //*** Syntax highlighter code ***//
 
     function syntaxCheck(sourceElementId, targetElementId, force) {
-        console.log('syntaxCheck');
+        // console.log('syntaxCheck');
         if ($('#dynamic-input').is(":visible") && !force) {
             return false;
         }
