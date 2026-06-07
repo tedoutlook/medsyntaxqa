@@ -65,6 +65,8 @@
 <input type="text" id="query-title1" class="query-title"
        name="query-title1" size="100"
        onkeyup='updateTitle("query-title1")'
+       onfocusin="setEditMode(true);"
+       onfocusout="setEditMode(false);"
        placeholder="Please input a title for your query here...">
 <button id="clear-button" onclick="clearButtonFunc()">
     Click here to clear query
@@ -76,7 +78,8 @@
           onkeyup='syntaxCheck("query-input1","medsyntax-target1")'
           onchange='syntaxCheck("query-input1","medsyntax-target1")'
           onclick='syntaxCheck("query-input1","medsyntax-target1")'
-          onfocusout='syntaxCheck("query-input1","medsyntax-target1", true)'
+          onfocusin="setEditMode(true)"
+          onfocusout='syntaxCheck("query-input1","medsyntax-target1", true); setEditMode(false);'
           placeholder="Please input search query here..."></textarea>
 
 
@@ -273,6 +276,8 @@
             // if (ws !== '0') {
             //     $('#demo-button').hide();
             // }
+
+            setEditMode(false);
         }
     });
 
@@ -395,6 +400,23 @@
             // Use postMessage to send data to the parent window
             window.parent.postMessage(messageData);
         }
+    }
+
+    function setEditMode(trueFalse) {
+        console.log('setEditMode' + ' ' + trueFalse);
+        if (!ws) {
+            return;
+        }
+
+        const messageData = {
+            status: "success",
+            type: "setEditMode",
+            payload: trueFalse
+        };
+
+        // console.log('Sending updateUrl message:', messageData);
+        // Use postMessage to send data to the parent window
+        window.parent.postMessage(messageData);
     }
 
     function demoClickFunction() {
@@ -843,18 +865,19 @@
             && document.getElementById(warningQuotesElementId).hidden) {
             let elementForHover;
             $('#' + targetElementId + ' .search-string div').mousemove(function (event) {
-
+                // console.log('elementForHover new?', (elementForHover !== this));
                 if (elementForHover !== this) {
                     if ($(this).hasClass('hover')) {
+                        // console.log('hover class already present');
                         return false;
                     }
                     makeEditScope(targetElementId, this)
                     elementForHover = this;
                 }
 
+                elementForHover = null;
                 return false;
             });
-
         }
 
         console.log(str_Random() + ' afterParseFunction duration: ' + (Date.now() - time) + 'ms');
@@ -862,6 +885,7 @@
 
     // Determine edit scope
     function makeEditScope(targetElementId, element) {
+        // console.log('makeEditScope');
         $('#' + targetElementId + ' div').removeClass('hover');
         $('#' + targetElementId + ' div').off('mousedown');
 
@@ -873,7 +897,7 @@
         if ($(element).hasClass('brackets')) {
             selectionForHover = $(element).addClass('hover');
             selectionForHover.mousedown(function (event) {
-                hoverMouseDown();
+                hoverMouseDown(event);
             });
         }
 
@@ -894,7 +918,7 @@
             $(element).off('mousedown');
             $(element).addClass('hover');
             $(element).mousedown(function (event) {
-                hoverMouseDown();
+                hoverMouseDown(event);
             });
 
             addHoverThisAndNextElement($(element).next())
@@ -906,21 +930,23 @@
             $(element).off('mousedown');
             $(element).addClass('hover');
             $(element).mousedown(function (event) {
-                hoverMouseDown();
+                hoverMouseDown(event);
             });
             addHoverThisAndPrevElement($(element).prev())
         }
     }
 
     // Start edit on mouse down method
-    function hoverMouseDown() {
+    function hoverMouseDown(event) {
+        event.preventDefault();
         medsyntaxTargetWidth = $("#medsyntax-target1").width();
         $('.medsyntax-target div').off('mousemove');
 
         const text = $(".hover").text();
         $(".hover").wrapAll("<div class='newInputTarget' />");
         $(".medsyntax-target .newInputTarget")
-            .replaceWith('<textarea id="dynamic-input" class="dynamic-input"/>');
+            .replaceWith('<textarea id="dynamic-input" class="dynamic-input"' +
+                ' onfocusin="setEditMode(true)" onfocusout="setEditMode(false)"/>');
 
         $("#dynamic-input").val(text);
         $("#dynamic-input").on('keydown', function (e) {
@@ -934,6 +960,7 @@
             textAreaAdjust(this, true, medsyntaxTargetWidth);
         });
         textAreaAdjust(input, true, medsyntaxTargetWidth);
+        input.focus()
     }
 
     function onEnterDynamicInput() {

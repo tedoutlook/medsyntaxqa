@@ -32,6 +32,10 @@
             return;
         }
 
+        if (event.data.type === "setEditMode") {
+            console.log('setEditMode', event.data.payload);
+        }
+
         if (event.data.type !== "updateUrl") {
             return;
         }
