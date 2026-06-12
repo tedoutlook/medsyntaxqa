@@ -88,6 +88,8 @@
 <p id="warning-square-bracket-open" class="warning-medsyntax">Too many [ in query. Or not enough ] in query.</p>
 <p id="warning-square-bracket-close" class="warning-medsyntax">Too many ] in query. Or not enough [] in query.</p>
 <p id="warning-quotes" class="warning-medsyntax">Incorrect number of quote signs.</p>
+<p id="warning-double-or" class="warning-medsyntax">Duplicate OR-operators.</p>
+<p id="warning-double-and" class="warning-medsyntax">Duplicate AND-operators.</p>
 <p id="warning-ambiguous-and" class="warning-medsyntax">Semantically potentially unclear boolean operator(s). Not
     fixing these in very long strings may impact medsyntax performance.</p>
 
@@ -442,6 +444,8 @@
     const warningSquareBracketOpenElementId = "warning-square-bracket-open";
     const warningQuotesElementId = "warning-quotes";
     const warningAmbiguousAndElementId = "warning-ambiguous-and";
+    const warningDoubleOrElementId = "warning-double-or";
+    const warningDoubleAndElementId = "warning-double-and";
 
     function hideWarnings() {
         document.getElementById(warningBracketCloseElementId).hidden = true;
@@ -450,6 +454,8 @@
         document.getElementById(warningSquareBracketOpenElementId).hidden = true;
         document.getElementById(warningQuotesElementId).hidden = true;
         document.getElementById(warningAmbiguousAndElementId).hidden = true;
+        document.getElementById(warningDoubleOrElementId).hidden = true;
+        document.getElementById(warningDoubleAndElementId).hidden = true;
     }
 
     //*** Syntax highlighter code ***//
@@ -590,12 +596,14 @@
     function doubleBooleanAndFunction(x) {
         x = x.replace(new RegExp(' ', 'gi'), special);
         x = "<div class=\"double-boolean-and\">" + x + "</div>";
+        document.getElementById(warningDoubleAndElementId).hidden = false;
         return x;
     }
 
     function doubleBooleanOrFunction(x) {
         x = x.replace(new RegExp(' ', 'gi'), special);
         x = "<div class=\"double-boolean-or\">" + x + "</div>";
+        document.getElementById(warningDoubleOrElementId).hidden = false;
         return x;
     }
 
