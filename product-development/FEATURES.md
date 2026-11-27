@@ -41,7 +41,7 @@ Medsyntax is a syntax assistant for (medical) search engine queries with a scope
 
 ## WORKSPACE (MedSyntaxMulti)
 - A list of queries (items), each an embedded EDITOR, kept in one shareable link
-- A work-in-progress warning (experimental v0.1, links may not open in later versions) as a modal, once per browser tab; the "v0.1 · work in progress" link in the header shows it again
+- A work-in-progress warning (experimental v0.1, links may not open in later versions) as a modal, once per browser tab; the "v0.1 · work in progress" link in the header shows it again. It links to the GitHub issues (for now `tedoutlook/medsyntaxqa/issues`)
 - Add, duplicate, move, collapse, clear the query, and remove (after a confirmation) with Undo, without disturbing other items
 - New workspace: opens an empty WORKSPACE in a new tab
 - Edit, copy and clear query in the card header; the card's buttons are icons (Lucide) with their text in tooltips, without a More menu
@@ -133,6 +133,7 @@ Not covered by the WORKSPACE's references between items (REF in `product-develop
 ### Docs / housekeeping
 - [ ] Update `README.md` (still says "medsyntaxexperimental"; add usage and dev instructions)
 - [ ] Document how `site/workspace/` (MedSyntaxMulti) relates to the main app
+- [ ] Change the issue link in the WORKSPACE's work-in-progress warning (now `tedoutlook/medsyntaxqa/issues`, temporary) to the final issue page, like the header's "Report an issue" link
 
 ### Ideas
 - [ ] Support more search engine syntaxes (PubMed, Ovid, etc.)

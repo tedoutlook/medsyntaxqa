@@ -235,4 +235,15 @@ test.describe('WORKSPACE work-in-progress warning', () => {
         await expect(notice(page)).toBeVisible();
         await expect(okButton(page)).toBeFocused();
     });
+
+    test('links to the GitHub issues in a new tab, reachable with the keyboard', async ({page}) => {
+        await page.goto('/workspace/');
+        const link = notice(page).getByRole('link', {name: 'Report an issue on GitHub'});
+        await expect(link).toHaveAttribute('href', 'https://github.com/tedoutlook/medsyntaxqa/issues');
+        await expect(link).toHaveAttribute('target', '_blank');
+        await expect(link).toHaveAttribute('rel', /noopener/);
+        await expect(okButton(page)).toBeFocused();
+        await page.keyboard.press('Shift+Tab');
+        await expect(link).toBeFocused();
+    });
 });
