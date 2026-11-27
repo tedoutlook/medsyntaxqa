@@ -54,9 +54,11 @@ test.describe('EDITOR embedded mode (?ws=1)', () => {
         await emptyInput(page).fill('heart AND lung');
         await emptyInput(page).press('Enter');
 
-        await expect.poll(async () => (await messages(page)).filter((m) => m.type === 'updateUrl').length)
-            .toBeGreaterThan(0);
-        const update = (await messages(page)).filter((m) => m.type === 'updateUrl').at(-1)!;
+        // Wait for the one with the query: another updateUrl (of the title, say) can be there before it.
+        const withQuery = async () => (await messages(page)).filter((m) => m.type === 'updateUrl'
+            && new URLSearchParams(String(m.payload).split('%index%')[1]).get('query'));
+        await expect.poll(async () => (await withQuery()).length).toBeGreaterThan(0);
+        const update = (await withQuery()).at(-1)!;
         const [index, queryString] = String(update.payload).split('%index%');
         expect(index).toBe('1');
         const params = new URLSearchParams(queryString);
