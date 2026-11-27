@@ -109,13 +109,17 @@ if (ws) {
             updateTitle('query-title1');
             updateTreeLabel();
         }
+        // The WORKSPACE sends these on the iframe's load event, which can come before the start-up in
+        // editor.js (a jQuery ready handler) has put the query of the link in the box. $(…) runs them after it.
         if (event.data.type === 'editQuery') {
-            openQueryBox();
+            $(openQueryBox);
         }
         if (event.data.type === 'clearQuery') {
-            clearButtonFunc();
-            // It may have removed an open scope edit, whose focusout may not fire.
-            setEditMode(false);
+            $(() => {
+                clearButtonFunc();
+                // It may have removed an open scope edit, whose focusout may not fire.
+                setEditMode(false);
+            });
         }
         if (event.data.type === 'hideQueryBox' && !queryBoxFocused) {
             queryBoxOpen = false;

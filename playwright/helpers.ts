@@ -123,6 +123,9 @@ async function scopeEditAccepts(page: Page, n: number, query: string) {
 
 /** Enter a query in empty item n's input, which must accept it, and let it render. */
 async function enterInEmptyItem(page: Page, n: number, query: string) {
+    // Click first, as a user would: while the WORKSPACE itself has the focus, Firefox ignores fill's
+    // focus() inside an item, and the text goes nowhere.
+    await emptyItemInput(page, n).click();
     await emptyItemInput(page, n).fill(query);
     await emptyItemInput(page, n).press('Enter');
     await expect(emptyItemInput(page, n)).toHaveCount(0);
