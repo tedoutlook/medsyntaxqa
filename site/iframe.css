@@ -30,6 +30,9 @@ body.ws-iframe-body {
     --accent: #ececec; --hover: #ffa64d; --danger-bg: #3b1d1d; --danger-ink: #f4b4b4;
     /* As lines on a dark card, the darker colours must be lighter. */
     --item-line: color-mix(in srgb, var(--item-color) 55%, white);
+    /* The visualisation's colours from style.css that are too dark on the dark paper (below) */
+    --color-one-dark-text: #9fb3ff; --color-gray: #a8a8a8;
+    --paper: #1b1c1f;
 }
 
 .ws-embedded body {
@@ -133,7 +136,7 @@ body.ws-iframe-body {
     margin: 8px 0;
 }
 
-/* Always white paper, also in dark mode: its colours carry meaning. */
+/* The visualisation is on white paper; in dark mode on dark paper (see the end of this block). */
 .ws-embedded #medsyntax-target1 {
     display: block;
     box-sizing: border-box;
@@ -163,7 +166,7 @@ body.ws-iframe-body {
     color: #1c2525;
 }
 
-/* The input of an empty item (scripts/editor/item.js), on the white paper */
+/* The input of an empty item (scripts/editor/item.js), on the paper */
 .ws-embedded .dynamic-input.empty-query-input {
     display: block;
     width: 100% !important;
@@ -176,6 +179,62 @@ body.ws-iframe-body {
 
 .ws-embedded .dynamic-input.empty-query-input::placeholder {
     color: #6b7575;
+}
+
+/* Dark mode: dark paper. The rules with :where() have the specificity of those in style.css, which they follow, so
+   its hover rules still win. Booleans and field tags get lighter colours through the variables above. */
+.ws-embedded[data-theme="dark"] #medsyntax-target1,
+.ws-embedded[data-theme="dark"] .medsyntax div.search-string {
+    color-scheme: dark;
+    color: #eee;
+    background: var(--paper);
+}
+
+:where(.ws-embedded[data-theme="dark"]) .medsyntax div {
+    color: #eee;
+}
+
+:where(.ws-embedded[data-theme="dark"]) .medsyntax .term {
+    border-bottom-color: #6a6d73;
+}
+
+:where(.ws-embedded[data-theme="dark"]) .medsyntax-target div.quote-term {
+    background: #4a4c52;
+}
+
+:where(.ws-embedded[data-theme="dark"]) .medsyntax-target .quote-term div.bracket-open,
+:where(.ws-embedded[data-theme="dark"]) .medsyntax-target .quote-term div.bracket-close {
+    border-color: #4a4c52;
+}
+
+/* Dark text on the orange of a hovered scope */
+:where(.ws-embedded[data-theme="dark"]) .medsyntax-target div.hover,
+:where(.ws-embedded[data-theme="dark"]) .medsyntax-target .hover div {
+    color: #111;
+}
+
+/* After the two rules above, as in style.css: the orange of a scope, and the white of the red errors */
+:where(.ws-embedded[data-theme="dark"]) .medsyntax-target .hover div.bracket-open,
+:where(.ws-embedded[data-theme="dark"]) .medsyntax-target .hover div.bracket-close {
+    border-color: var(--color-one-base);
+}
+
+:where(.ws-embedded[data-theme="dark"]) .medsyntax-target div.double-boolean-or,
+:where(.ws-embedded[data-theme="dark"]) .medsyntax-target div.double-boolean-and,
+:where(.ws-embedded[data-theme="dark"]) .medsyntax-target div.lonely-bracket-open,
+:where(.ws-embedded[data-theme="dark"]) .medsyntax-target div.lonely-bracket-close,
+:where(.ws-embedded[data-theme="dark"]) .medsyntax-target div.lonely-square-bracket-open,
+:where(.ws-embedded[data-theme="dark"]) .medsyntax-target div.lonely-square-bracket-close {
+    color: white;
+}
+
+.ws-embedded[data-theme="dark"] .dynamic-input.empty-query-input {
+    color: #eee;
+    background: var(--paper);
+}
+
+.ws-embedded[data-theme="dark"] .dynamic-input.empty-query-input::placeholder {
+    color: #a8a8a8;
 }
 
 .ws-embedded #demo2 {
@@ -243,7 +302,7 @@ body.ws-iframe-body {
     pointer-events: none;
 }
 
-/* Around an item it lies on the card, which can be dark; a scope is always on white paper. */
+/* Around an item it lies on the card, which can be dark; a scope on the paper, white or dark. */
 .item-is-current body::before {
     --glow: var(--item-line);
 }

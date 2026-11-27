@@ -816,13 +816,29 @@ test.describe('WORKSPACE style', () => {
         }
     });
 
-    test('19./20. Dark mode: page and items are dark, the visualisation white, a direct EDITOR unchanged', async ({page}) => {
+    test('19./20. Dark mode: page, items and visualisation are dark, a direct EDITOR unchanged', async ({page}) => {
         await openWorkspace(page, [A]);
         await expect(page.locator('body')).toHaveCSS('background-color', 'rgb(211, 211, 211)');
         await page.emulateMedia({colorScheme: 'dark'});
         await expect(page.locator('body')).toHaveCSS('background-color', 'rgb(38, 39, 43)');
         await expect(itemFrame(page, 0).locator('body')).toHaveCSS('background-color', 'rgb(38, 39, 43)');
-        await expect(visual(page, 0)).toHaveCSS('background-color', 'rgb(255, 255, 255)');
+
+        // Dark paper, with light text and lighter syntax colours; a hovered scope keeps dark text on orange.
+        const paper = 'rgb(27, 28, 31)';
+        await expect(visual(page, 0)).toHaveCSS('background-color', paper);
+        await expect(visual(page, 0).locator('.search-string')).toHaveCSS('background-color', paper);
+        const lung = visual(page, 0).locator('.term', {hasText: 'lung'});
+        await expect(lung).toHaveCSS('color', 'rgb(238, 238, 238)');
+        await expect(visual(page, 0).locator('.boolean', {hasText: 'AND'})).toHaveCSS('color', 'rgb(159, 179, 255)');
+        await lung.hover();
+        await expect(lung).toHaveCSS('background-color', 'rgb(255, 165, 0)');
+        await expect(lung).toHaveCSS('color', 'rgb(17, 17, 17)');
+
+        // The input of an empty item is on the same dark paper.
+        await button(page, '+ Add query after 1').click();
+        await waitForItems(page, 2);
+        await expect(emptyItemInput(page, 1)).toHaveCSS('background-color', paper);
+        await expect(emptyItemInput(page, 1)).toHaveCSS('color', 'rgb(238, 238, 238)');
 
         await page.goto('/index.html');
         await enterQuery(page, A.query);
@@ -866,7 +882,8 @@ test.describe('WORKSPACE colour switch', () => {
             await expect(itemFrame(page, n).locator('html')).toHaveAttribute('data-theme', theme);
             await expect(itemFrame(page, n).locator('body')).toHaveCSS('background-color',
                 theme === 'dark' ? 'rgb(38, 39, 43)' : 'rgb(211, 211, 211)');
-            await expect(visual(page, n)).toHaveCSS('background-color', 'rgb(255, 255, 255)');
+            await expect(visual(page, n)).toHaveCSS('background-color',
+                theme === 'dark' ? 'rgb(27, 28, 31)' : 'rgb(255, 255, 255)');
         }
     }
 
