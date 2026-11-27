@@ -1,6 +1,6 @@
 // @ts-check
 import {test, expect, type Page} from './base-test';
-import {captureAlerts, enterQuery, expectWarnings, queryBox, target} from './helpers';
+import {answerUnfinishedEdit, captureAlerts, enterQuery, expectWarnings, queryBox, target} from './helpers';
 
 // EDITOR (site/index.html): unusual input. Tests marked 'Known bug' describe
 // the wanted behaviour and are expected to fail; remove their test.fail line
@@ -250,8 +250,9 @@ test.describe('EDITOR edge cases', () => {
             await startEdit(page, target(page).locator('.term', {hasText: 'cardiac'}));
         });
 
-        test('Clear ends the edit and empties the query', async ({page}) => {
+        test('Clear, after Discard edit, ends the edit and empties the query', async ({page}) => {
             await page.locator('#clear-button').click();
+            await answerUnfinishedEdit(page, 'Discard edit');
             await expect(dynamicInput(page)).toHaveCount(0);
             await expect(queryBox(page)).toHaveValue('');
             await expect(target(page)).toHaveText('');
@@ -283,6 +284,9 @@ test.describe('EDITOR edge cases', () => {
 
         test('keys keep the edit open after the query was cleaned up', async ({page}) => {
             await page.locator('#clear-button').click();
+            await answerUnfinishedEdit(page, 'Discard edit');
+            // The button runs on the dialog's close event, a moment after the answer.
+            await expect(queryBox(page)).toHaveValue('');
             await enterQuery(page, '(heart OR cardiac)AND(lung)');
             await expect(queryBox(page)).toHaveValue('(heart OR cardiac) AND (lung)');
             await startEdit(page, target(page).locator('.term', {hasText: 'cardiac'}));

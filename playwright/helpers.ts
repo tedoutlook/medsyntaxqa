@@ -197,3 +197,20 @@ export async function linkQueries(page: Page): Promise<string[]> {
             });
     });
 }
+
+/** The dialog that asks about an unfinished scope edit before a button runs (EDITOR and WORKSPACE). */
+export const unfinishedEditDialog = (page: Page) => page.locator('#unfinished-edit');
+
+/**
+ * Answers the dialog about an unfinished scope edit. With `text`, first checks
+ * its message (for example 'Query C has an unfinished edit.').
+ */
+export async function answerUnfinishedEdit(page: Page, choice: 'Accept edit' | 'Discard edit' | 'Keep editing',
+                                           text?: string) {
+    const dialog = unfinishedEditDialog(page);
+    await expect(dialog).toBeVisible();
+    if (text) {
+        await expect(dialog).toContainText(text);
+    }
+    await dialog.getByRole('button', {name: choice, exact: true}).click();
+}

@@ -164,11 +164,22 @@
     <div id="caption"></div>
 </div>
 
+<!-- Asked before a button runs while a scope edit is open (unfinished-edit.js) -->
+<dialog id="unfinished-edit" class="unfinished-edit" aria-labelledby="unfinished-edit-text">
+    <p id="unfinished-edit-text">This query has an unfinished edit.</p>
+    <form method="dialog">
+        <button value="accept" autofocus>Accept edit</button>
+        <button value="discard">Discard edit</button>
+        <button value="keep">Keep editing</button>
+    </form>
+</dialog>
+
 <script src="scripts/editor/color-mode.js"></script>
 
 <script src="scripts/editor/help-image.js"></script>
 
 <script src="scripts/editor/editor.js"></script>
+<script src="scripts/editor/unfinished-edit.js"></script>
 
 <!-- Only for items of the WORKSPACE: without ws these do nothing. -->
 <script src="scripts/editor/item.js"></script>

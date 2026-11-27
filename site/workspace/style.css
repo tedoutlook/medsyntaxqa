@@ -21,7 +21,7 @@
 }
 /* The light colours, in grey. The filter covers the items' iframes too. Not on :root: Firefox then leaves out
    what is below the first screen in full-page screenshots. */
-:root[data-theme="greyscale"] :is(header, main, #undo-toast, #wip-notice) { filter: grayscale(1); }
+:root[data-theme="greyscale"] :is(header, main, #undo-toast, #wip-notice, #unfinished-edit) { filter: grayscale(1); }
 :root[data-theme="greyscale"] {
     --badge-dark-ink: #000; /* in grey, #1c2525 has only 4.47:1 on item colour 7 */
 }
@@ -129,6 +129,11 @@ a.btn { display: inline-flex; align-items: center; gap: 4px; text-decoration: no
 #wip-notice h2 { font-size: 1.1rem; margin: 0 0 8px; }
 #wip-notice p { margin: 0 0 14px; }
 #wip-notice form { display: flex; justify-content: flex-end; }
+/* Asked before a button runs while an item has a scope edit open (scripts/workspace/unfinished-edit.js). */
+#unfinished-edit { width: min(460px, calc(100% - 32px)); background: var(--box); color: var(--ink); border: 5px solid var(--line); border-radius: 10px; padding: 18px 20px; box-shadow: 0 6px 18px rgb(0 0 0 / .25); }
+#unfinished-edit::backdrop { background: rgb(0 0 0 / .45); }
+#unfinished-edit p { margin: 0 0 14px; }
+#unfinished-edit form { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
 #show-wip-notice { font: inherit; color: var(--link); background: none; border: 0; padding: 0; margin-left: 6px; text-decoration: underline; cursor: pointer; }
 .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
 

@@ -110,11 +110,11 @@ Dark mode:
 | ITEM-6 | No action changes or loses the title or query of another item. | Must |
 | ITEM-7 | Duplicate adds a copy of the title and query right after the item. | Should |
 | ITEM-8 | An item can be collapsed to its card header, and expanded again. After a reload all items are expanded. | Should |
-| ITEM-9 | Actions on one item leave unfinished edits in the others alone. | Should |
+| ITEM-9 | No button runs while a scope edit is open in any item. A dialog first asks about each open edit, from the top down: Accept edit (as Enter; an invalid edit alerts, stays open and focused, and the button does not run), Discard edit (the query as it was), or Keep editing (also Escape: the button does not run, the focus goes back into the edit). Once every edit is accepted or discarded, the button runs. Actions on one item leave the others' current node and query boxes alone. | Must |
 | ITEM-10 | A reload, or opening a link, deletes every clear item and closes the gaps: the others keep their order, title and query, and the link is updated to match. If all items are clear, one is left. An item with only a title, or only a query, stays. | Must |
 | ITEM-11 | An item's query box shows only while it has the focus, and when there is nothing to visualise: an empty query, or unbalanced brackets or quotes. Otherwise only the visualisation shows. "Edit query" in the card's header shows the box with the focus in it, and expands a collapsed item. While the user types, the visualisation shows below the box and updates live, as now. Warnings always show. | Must |
 | ITEM-12 | Leaving the box never makes the user's click miss its target, although hiding the box moves what is below. | Must |
-| ITEM-13 | A Clear query button, directly before Remove in the card's header, clears the query and keeps the title. It also works on a collapsed item, and drops an unfinished scope edit in that item. It has no Undo, and leaves the Undo of a removal available. The item itself has no clear button. | Must |
+| ITEM-13 | A Clear query button, directly before Remove in the card's header, clears the query and keeps the title. It also works on a collapsed item; open scope edits are settled first (ITEM-9). It has no Undo, and leaves the Undo of a removal available. The item itself has no clear button. | Must |
 | ITEM-14 | The title can be edited in the card's header, also while the item is collapsed or still loading. A title is never lost by an action right after typing. | Must |
 | ITEM-15 | "Show a multiline search example", next to "Show example", puts nine items, the last one with nested references, in place of the clear ones, under the same conditions. "Show example", next to "Add query at the top", puts four items with the labels, queries and order of the Medsyntax PICO demo in place of the clear ones (C has no query; O is nested, with brackets in brackets in brackets). It shows only while every item is clear, so it never replaces work. Like add, it ends a pending Undo. Items have no demo button. | Should |
 | ITEM-16 | The button that adds a query after an item is below its card, also while the item is collapsed. | Must |
@@ -128,7 +128,7 @@ Dark mode:
 | REF-1 | `#` and a number, outside quotes and as a word of its own (next to a space, a bracket, or the start or end), refers to the item with that number. So not in `"#1"`, `a#1`, `#1[tiab]` or `#1-#3`. Only in the WORKSPACE. | Must |
 | REF-2 | A reference is a chip in the visualisation, in the colour of its item, with that item's title and full query (at most 500 characters) as tooltip. Scopes, scope edits and keys work as without chips. | Must |
 | REF-3 | "Copy query" copies the text as typed. "Copy full query", only on items with references, copies the query with each reference replaced by that item's full query in brackets (not doubled). With it, all buttons are next to the title from 1270px. | Must |
-| REF-4 | After move, add, duplicate, remove and Undo, references follow their item: in the queries, the link, a query box that is being typed in (the cursor stays) and an open scope edit (it stays open). | Must |
+| REF-4 | After move, add, duplicate, remove and Undo, references follow their item: in the queries, the link, and a query box that is being typed in (the cursor stays). An open scope edit is settled before the change (ITEM-9); where it is still open (renumberItemReferences), it is renumbered and stays open. | Must |
 | REF-5 | A reference to a removed item becomes `#3?`. Undo makes it `#3` again. At the next removal, older ones become `#?`. | Must |
 | REF-6 | When clear items are dropped on reload (ITEM-10), references follow; those to a dropped item become missing. | Must |
 | REF-7 | A problem shows as a red dashed chip and a warning, and disables Copy full query: no such item, a removed one, no query, unbalanced brackets or quotes, a circle, or over 1 million characters. It counts for the items that refer to that item too. It doesn't turn scope editing off. | Must |
@@ -198,7 +198,7 @@ To become Playwright tests. Unless stated otherwise: three items with the titles
 10. **Reload:** without clear items, numbers, colours, titles and queries are the same after a reload.
 11. **Reload deletes clear items:** add after A, give C no query but keep its title, and reload. The order is A, B, C, numbered 1–3, and the link has three items.
 12. **Reload with only clear items:** open `/workspace/`, add two items and reload. One clear item is left.
-13. **Unfinished edit:** start a scope edit in C and move A down. The edit in C is still open.
+13. **Unfinished edit:** start a scope edit in C and move A down. A dialog asks about the edit in C. Keep editing: nothing moves, the focus is back in the edit. Move A down again and choose Discard edit: A moves, and C shows its query as it was.
 14. **Keys after move:** move A down and press Alt+Down on B (item 1). A (item 2) is selected.
 15. **Keys and collapse:** collapse B and press Alt+Down on A. B expands and is selected. Alt+Down again selects C, and B stays expanded.
 16. **Keys after add:** add after A, then Escape. Item 2 is selected; Alt+Down selects B.

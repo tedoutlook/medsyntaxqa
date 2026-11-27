@@ -74,6 +74,16 @@
     </form>
 </dialog>
 
+<!-- Asked before a button runs while an item has a scope edit open (scripts/workspace/unfinished-edit.js) -->
+<dialog id="unfinished-edit" aria-labelledby="unfinished-edit-text">
+    <p id="unfinished-edit-text">This query has an unfinished edit.</p>
+    <form method="dialog">
+        <button class="btn primary" value="accept" autofocus>Accept edit</button>
+        <button class="btn" value="discard">Discard edit</button>
+        <button class="btn" value="keep">Keep editing</button>
+    </form>
+</dialog>
+
 <div id="undo-toast" hidden>
     <span id="undo-toast-text"></span>
     <button class="btn" id="undo-button">Undo</button>
@@ -82,6 +92,7 @@
 
 <script src="../scripts/references.js"></script>
 <script src="../scripts/workspace/wip-notice.js"></script>
+<script src="../scripts/workspace/unfinished-edit.js"></script>
 <script src="../scripts/workspace/workspace.js"></script>
 </body>
 

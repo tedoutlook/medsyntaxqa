@@ -323,6 +323,25 @@ function endScopeEdit() {
     selectNodeOrTopNode(editedPath);
 }
 
+// The WORKSPACE calls this before a button runs (workspace/unfinished-edit.js): 'accept' the open scope edit
+// (as Enter), 'discard' it, or anything else to keep editing. Returns whether the edit is closed; when it is
+// not, the focus is back in it.
+function settleScopeEdit(choice) {
+    if (choice === 'accept') {
+        onEnterDynamicInput();
+    } else if (choice === 'discard') {
+        syntaxCheck('query-input1', 'medsyntax-target1', true);
+    }
+    const input = document.getElementById('dynamic-input');
+    if (input) {
+        window.focus();
+        input.focus();
+        return false;
+    }
+    endScopeEdit();
+    return true;
+}
+
 function onScopeEditKey(event) {
     if (event.key === 'Enter') {
         event.preventDefault();
