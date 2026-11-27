@@ -41,7 +41,7 @@ Medsyntax is a syntax assistant for (medical) search engine queries with a scope
 
 ## WORKSPACE (MedSyntaxMulti)
 - A list of queries (items), each an embedded EDITOR, kept in one shareable link
-- A work-in-progress warning (experimental v0.1, links may not open in later versions) as a modal, once per browser tab; the "v0.1 · work in progress" link in the header shows it again. It links to the GitHub issues (for now `tedoutlook/medsyntaxqa/issues`), and has a Twemoji crab (CC BY 4.0) in its title
+- A work-in-progress warning (experimental v0.1, links may not open in later versions) as a modal, once per browser tab; the "v0.1 · work in progress" link in the header shows it again. It links to the GitHub issues (for now `tedoutlook/medsyntaxqa/issues`), and has a 🦀 in its title
 - Add, duplicate, move, collapse, clear the query, and remove (after a confirmation) with Undo, without disturbing other items
 - New workspace: opens an empty WORKSPACE in a new tab
 - Edit, copy and clear query in the card header; the card's buttons are icons (Lucide) with their text in tooltips, without a More menu
