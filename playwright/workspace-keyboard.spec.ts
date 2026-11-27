@@ -1038,8 +1038,10 @@ test.describe('WORKSPACE marker colours', () => {
         expect(first.delay * 1000).toBeGreaterThan(-(Date.now() - start) - 50);
 
         await page.waitForTimeout(800);
-        await page.setViewportSize({width: 900, height: 900}); // draws it again
-        await expect.poll(async () => (await pulse(page)).delay).toBeLessThan(-0.6);
+        await page.setViewportSize({width: 900, height: 900}); // may draw it again
+        await itemFrame(page, 0).locator('body').evaluate(() => (window as any).drawMarker()); // does
+        await page.waitForTimeout(100);
+        expect((await pulse(page)).name).toBe('marker-pulse');
         expect((await pulse(page)).running).toBe(0);
     });
 

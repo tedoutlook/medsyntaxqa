@@ -219,29 +219,35 @@ function rectsOfScope(scope) {
 let markedNode = null;
 let markedSince = 0;
 
+// It also runs in a ResizeObserver. There it moves the boxes it has instead of making new ones: iframe-resizer
+// observes every new positioned element, and new ones in each round give WebKit's "ResizeObserver loop" error.
 function drawMarker() {
-    markerElement.replaceChildren();
     const shown = treeHasFocus();
     const node = shown ? currentPath.join('.') : null;
     if (node !== markedNode) {
         markedNode = node;
         markedSince = performance.now();
+        markerElement.replaceChildren(); // new boxes, whose pulse starts
     }
     const scope = shown ? scopeAt(currentPath) : null;
     document.documentElement.classList.toggle('item-is-current', shown && !scope);
-    if (!scope) {
-        return;
+    const rects = scope ? rectsOfScope(scope) : [];
+    while (markerElement.children.length > rects.length) {
+        markerElement.lastElementChild.remove();
     }
     const gap = 3;
-    rectsOfScope(scope).forEach((rect) => {
-        const box = document.createElement('div');
-        box.className = 'current-scope';
-        box.style.animationDelay = markedSince - performance.now() + 'ms';
+    rects.forEach((rect, index) => {
+        let box = markerElement.children[index];
+        if (!box) {
+            box = document.createElement('div');
+            box.className = 'current-scope';
+            box.style.animationDelay = markedSince - performance.now() + 'ms';
+            markerElement.append(box);
+        }
         box.style.left = rect.left + window.scrollX - gap + 'px';
         box.style.top = rect.top + window.scrollY - gap + 'px';
         box.style.width = rect.right - rect.left + 2 * gap + 'px';
         box.style.height = rect.bottom - rect.top + 2 * gap + 'px';
-        markerElement.append(box);
     });
 }
 
