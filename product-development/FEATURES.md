@@ -49,6 +49,7 @@ Medsyntax is a syntax assistant for (medical) search engine queries with a scope
 - Title per item in its card header, and a Show example button with four PICO queries while every item is clear
 - Number and colour per item; a switch for system, light, dark or greyscale colours, remembered in the browser
 - The query box shows while editing; otherwise only the visualisation
+- An empty item has no query box but the scope editor's input: Enter enters the query, Escape, Tab or a click outside cancels, unbalanced brackets or quotes keep it open (tests: `workspace-empty-item.spec.ts`)
 - Opening the page or loading an example leaves nothing selected; a number key or Tab starts keyboard navigation
 - Keyboard navigation through items and scopes, and scope editing without a mouse
 - Selecting an item selects its whole query as a scope; Enter edits it in the scope editor

@@ -163,6 +163,21 @@ body.ws-iframe-body {
     color: #1c2525;
 }
 
+/* The input of an empty item (scripts/editor/item.js), on the white paper */
+.ws-embedded .dynamic-input.empty-query-input {
+    display: block;
+    width: 100% !important;
+    /* The item then has the height that a new item has while it loads (its query box, above), so what is
+       below it stays in place. */
+    min-height: 60px;
+    margin: 0;
+    background: #fff;
+}
+
+.ws-embedded .dynamic-input.empty-query-input::placeholder {
+    color: #6b7575;
+}
+
 .ws-embedded #demo2 {
     display: none;
 }

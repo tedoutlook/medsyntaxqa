@@ -1,7 +1,7 @@
 // @ts-check
 import {test, expect, type Page} from './base-test';
 import {
-    enterItemQuery, itemBox, itemFrame, itemQuery, linkQueries, openItemBox, openWorkspace, waitForItems, workspaceItem,
+    emptyItemInput, enterItemQuery, itemBox, itemFrame, itemQuery, linkQueries, openItemBox, openWorkspace, waitForItems, workspaceItem,
     workspaceItems,
 } from './helpers';
 
@@ -50,7 +50,7 @@ test.describe('WORKSPACE', () => {
             const frame = itemFrame(page, n);
             await expect(frame.locator('body')).toHaveClass(/ws-iframe-body/);
             await expect(frame.getByRole('button', {name: 'menu'})).toBeHidden();
-            await expect(itemBox(page, n)).toBeVisible();
+            await expect(emptyItemInput(page, n)).toBeVisible();
         }
     });
 
@@ -63,14 +63,14 @@ test.describe('WORKSPACE', () => {
         await expect(itemFrame(page, 1).locator('#medsyntax-target1 .brackets')).toHaveCount(1);
     });
 
-    test('focusing an item\'s query box puts the WORKSPACE in edit mode', async ({page}) => {
+    test('focusing an empty item\'s input puts the WORKSPACE in edit mode', async ({page}) => {
         const editMode = () => page.evaluate(() => (window as any).eval('editMode'));
         expect(await editMode()).toBe(false);
 
-        await itemBox(page, 0).focus();
+        await emptyItemInput(page, 0).focus();
         await expect.poll(editMode).toBe(true);
 
-        await itemBox(page, 0).blur();
+        await emptyItemInput(page, 0).blur();
         await expect.poll(editMode).toBe(false);
     });
 

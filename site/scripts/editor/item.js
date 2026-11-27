@@ -20,14 +20,42 @@ function queryHasError() {
         .some((id) => !document.getElementById(id).hidden);
 }
 
+// An empty item has no query box, but the input of a scope edit (createDynamicInput), in the visualisation:
+// Enter confirms, Escape, Tab or a click outside cancels. Emptying the query box itself keeps the box until
+// it is left.
 function updateQueryView() {
     const isEmpty = queryBoxElement.value.trim() === '';
-    const showBox = queryBoxOpen || isEmpty || queryHasError();
-    queryBoxElement.hidden = !showBox;
-    document.getElementById('medsyntax-target1').hidden = isEmpty;
+    if (isEmpty && !queryBoxFocused) {
+        queryBoxOpen = false;
+    }
+    const showEmptyInput = isEmpty && !queryBoxFocused;
+    queryBoxElement.hidden = !(queryBoxOpen || queryHasError());
+    const target = document.getElementById('medsyntax-target1');
+    target.hidden = isEmpty && !showEmptyInput;
+    if (showEmptyInput && !document.getElementById('dynamic-input')) {
+        const input = createDynamicInput('');
+        input.classList.add('empty-query-input');
+        input.placeholder = 'Enter a query';
+        input.setAttribute('aria-label', 'Query');
+        // A scope edit of the whole item: it ends on the item itself (item-keyboard.js).
+        input.addEventListener('focusin', () => {
+            editedPath = [];
+        });
+        target.append(input);
+        textAreaAdjust(input, true, $(target).width());
+    }
+}
+
+function emptyQueryInput() {
+    return document.querySelector('#dynamic-input.empty-query-input');
 }
 
 function openQueryBox() {
+    if (queryBoxElement.value.trim() === '' && !queryBoxFocused) {
+        updateQueryView();
+        emptyQueryInput().focus();
+        return;
+    }
     queryBoxOpen = true;
     updateQueryView();
     queryBoxElement.focus();
