@@ -11,9 +11,11 @@ function unfinishedEditIsOpen() {
     return unfinishedEditDialog.open;
 }
 
+// An empty item always has an input (item.js); only once something is typed in it is it an unfinished edit.
 function openScopeEdit(item) {
-    return item.loaded && item.frame.contentDocument
+    const input = item.loaded && item.frame.contentDocument
         && item.frame.contentDocument.getElementById('dynamic-input');
+    return Boolean(input) && !(input.classList.contains('empty-query-input') && input.value.trim() === '');
 }
 
 // Resolves to the choice: 'accept', 'discard', or '' (Keep editing, or Escape).

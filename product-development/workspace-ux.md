@@ -24,7 +24,7 @@ Make the WORKSPACE easy to recognise, scan and rearrange.
 - The WORKSPACE and the items in it get the new style. An EDITOR opened directly (without `ws`) stays exactly as it was. Items also hide their query box when it is not being edited (ITEM-11).
 - The colours that carry meaning in the visualisation (operators, brackets, quotes, warnings, the scope highlight) stay, as in the fork.
 - The style is inspired by the Medsyntax Framework page in [mrgtverleg-lgtm/MedsyntaxQA](https://github.com/mrgtverleg-lgtm/MedsyntaxQA/tree/Medsyntax-Framework/framework) (commit `12f5d75`, GPL-3.0).
-- The WORKSPACE and its items have a dark mode with the fork's dark colours, and a greyscale mode: the light colours, all in grey. A switch in the header chooses System (the default, follows the system setting), Light, Dark or Greyscale. The choice is kept in the browser, not in the link. The visualisation stays white, like paper, as in the fork, because its colours carry meaning.
+- The WORKSPACE and its items have a dark mode with the fork's dark colours, and a greyscale mode: the light colours, all in grey. A switch in the header chooses System (the default, follows the system setting), Light, Dark or Greyscale. The choice is kept in the browser, not in the link. The visualisation is white paper in light mode and dark paper in dark mode; its colours that carry meaning stay, only made lighter where they would be unreadable on the dark.
 - Border colours of cards and buttons are the fork's.
 - Item colours: 1–4 are the borders of the four textareas of [Medsyntax PICO](https://tedgrm.github.io/picomedsyntax/) (`#query-input1` to `#query-input4`), 5 is a blue, and 6–10 are chosen to differ from those and each other. The marker of the current item has dashes in the item's colour on white (the brightest colours darkened), so that it differs from the solid lines around it. Dark mode lightens them where they are used as lines.
 - Each item has a number and a colour from a fixed palette. Both follow its position: nothing is stored in the link for them. They change when the item moves, or when an item above it is added or deleted, also by a reload.
@@ -75,6 +75,10 @@ Dark mode:
 | Danger: text, background, border | `#f4b4b4`, `#3b1d1d`, `#a05555` | text 8.72:1 |
 | Item badge | the same colours and text as in light mode | text: at least 4.57:1 |
 | Item edge, query box and visualisation border | the item colour, 55% mixed with white | at least 5.19:1 on a card |
+| Visualisation and the input of an empty item: paper / text | `#1b1c1f` / `#eee` | text 14.69:1 |
+| Visualisation: operators / field tags, NEAR and database names / term underline | `#9fb3ff` / `#a8a8a8` / `#6a6d73` | 8.41:1 / 7.17:1 / 3.28:1 on the paper |
+| Visualisation: quoted phrase, with `#eee` text | `#4a4c52` | text 7.40:1 |
+| Visualisation: hovered scope | the light mode's orange, with `#111` text | |
 | Marker of the current item or scope (every mode) | dashes in the item's colour on a white (`#fff`) line, 3px, with a glow. Around an item the dashes are slightly longer (9px, gaps 4px) | dashes: at least 3:1 on the white; the brightest colours are darkened for that |
 
 ## Requirements
@@ -91,9 +95,9 @@ Dark mode:
 | STYLE-6 | Colours are CSS variables in `site/workspace/style.css` and, for items, `site/iframe.css`. The font is Tahoma, as in the EDITOR. | Must |
 | STYLE-7 | The title field is whitesmoke and bold, with a 1px border and a 3px radius. While an item is collapsed and has no title, the field's placeholder is the start of the query, or "Empty query". The item has no title field of its own. | Should |
 | STYLE-8 | Items have the card's grey background. The query box is whitesmoke, monospace, with a 3px border in the item's colour and a 1px line in the text field border colour around it, because some item colours have less than 3:1 on white. | Must |
-| STYLE-9 | The visualisation is on white, in a frame with a 3px border in the item's colour and an 8px radius. Its syntax colours stay as now. | Must |
+| STYLE-9 | The visualisation is on white (dark in dark mode, STYLE-11), in a frame with a 3px border in the item's colour and an 8px radius. Its syntax colours stay as now. | Must |
 | STYLE-10 | Warnings in items are dark red on light red with a dark red left edge. | Must |
-| STYLE-11 | With Dark, or with System and a dark system setting, the WORKSPACE and its items use the dark colours. They change at once when the choice or the setting changes, without reloading items. The visualisation, and a scope edit in it, stay light. | Must |
+| STYLE-11 | With Dark, or with System and a dark system setting, the WORKSPACE and its items use the dark colours. They change at once when the choice or the setting changes, without reloading items. The visualisation and the input of an empty item are on dark paper, with lighter syntax colours where needed; a hovered scope stays orange with dark text, and a scope edit in it stays light. | Must |
 | STYLE-12 | Dark mode and the switch don't reach an EDITOR opened directly. | Must |
 | STYLE-13 | With Greyscale, the WORKSPACE and its items, including the visualisation, have the light look in grey. | Must |
 | STYLE-14 | The choice is remembered in the browser. If it can't be stored, it lasts until the page closes. | Must |
@@ -205,7 +209,7 @@ To become Playwright tests. Unless stated otherwise: three items with the titles
 17. **Keys on buttons:** with the focus on a card's Duplicate button, the arrow keys, Alt+Down, T and Escape do nothing. A digit selects the item with that number.
 18. **Query box:** type `(heart OR lung)` in an empty item: the visualisation follows while typing. Click its Duplicate button. The item is duplicated, and its box is hidden but its visualisation shows. Edit query shows the box, focused, above the visualisation. Remove the last bracket and press Tab: the box stays, with a warning.
 19. **EDITOR opened directly:** it looks and works as before (the existing EDITOR tests pass, with the same screenshot baselines).
-20. **Dark mode:** with a dark system setting, the WORKSPACE and its items are dark and the visualisation is white. An EDITOR opened directly looks the same as with a light setting.
+20. **Dark mode:** with a dark system setting, the WORKSPACE, its items and their visualisation are dark. An EDITOR opened directly looks the same as with a light setting.
 21. **Narrow screen:** at 375px wide the page doesn't scroll sideways.
 22. **Clear query:** clear B's query. Its title and the other items stay, also after a reload, and the focus stays on the button.
 23. **Title:** rename B in its card header. The link, the Clear query button's name and the tree label follow, also after a reload.

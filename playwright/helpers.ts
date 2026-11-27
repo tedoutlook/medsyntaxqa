@@ -103,8 +103,39 @@ export async function waitForItems(page: Page, count: number) {
     }
 }
 
-/** Show item n's query box and focus it. */
+/** Item n's input while it is empty: the input of a scope edit instead of its query box (item.js). */
+export const emptyItemInput = (page: Page, n: number) =>
+    itemFrame(page, n).locator('#dynamic-input.empty-query-input');
+
+/** Whether Enter accepts this query in a scope edit: no unbalanced quotes or brackets (onEnterDynamicInput). */
+async function scopeEditAccepts(page: Page, n: number, query: string) {
+    return itemFrame(page, n).locator('body').evaluate((_, text) => {
+        const win = window as any;
+        if ((text.split('"').length - 1) % 2 || (text.split('\'').length - 1) % 2) {
+            return false;
+        }
+        const rest = win.withoutQuotedText(text);
+        const count = (char: string) => rest.split(char).length - 1;
+        const order = win.bracketOrderProblems(rest);
+        return count('(') === count(')') && count('[') === count(']') && !order.round && !order.square;
+    }, query);
+}
+
+/** Enter a query in empty item n's input, which must accept it, and let it render. */
+async function enterInEmptyItem(page: Page, n: number, query: string) {
+    await emptyItemInput(page, n).fill(query);
+    await emptyItemInput(page, n).press('Enter');
+    await expect(emptyItemInput(page, n)).toHaveCount(0);
+}
+
+/**
+ * Show item n's query box and focus it. An empty item has no box (only its input), so it first gets the
+ * query `x`, which the box then holds.
+ */
 export async function openItemBox(page: Page, n: number) {
+    if (await emptyItemInput(page, n).isVisible()) {
+        await enterInEmptyItem(page, n, 'x');
+    }
     if (await itemBox(page, n).isVisible()) {
         await itemBox(page, n).focus();
     } else {
@@ -119,6 +150,16 @@ export async function openItemBox(page: Page, n: number) {
 
 /** Type a query into item n's EDITOR and let it render (see enterQuery). */
 export async function enterItemQuery(page: Page, n: number, query: string) {
+    // An empty item: its input, as a user would. A query it does not accept goes into the query box.
+    if (await emptyItemInput(page, n).isVisible()) {
+        if (query.trim() === '') {
+            return;
+        }
+        if (await scopeEditAccepts(page, n, query)) {
+            await enterInEmptyItem(page, n, query);
+            return;
+        }
+    }
     await openItemBox(page, n);
     await itemBox(page, n).fill(query);
     await itemBox(page, n).blur();

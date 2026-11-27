@@ -1,7 +1,7 @@
 // @ts-check
 import {test, expect, type Page} from './base-test';
 import {
-    captureAlerts, itemBox, itemFrame, itemQuery, linkQueries, normalise, openWorkspace, titleField,
+    captureAlerts, emptyItemInput, itemBox, itemFrame, itemQuery, linkQueries, normalise, openWorkspace, titleField,
     waitForItems, workspaceItem,
 } from './helpers';
 
@@ -449,14 +449,15 @@ test.describe('WORKSPACE keyboard navigation', () => {
         await press(page, 'Escape', 0, topA);
     });
 
-    test('emptying the whole query selects the item, and Enter then goes to its query box', async ({page}) => {
+    test('emptying the whole query selects the item, and Enter then goes to its input', async ({page}) => {
         await page.keyboard.press('Enter');
         await dynamicInput(page, 0).fill('');
         await press(page, 'Enter', 0, 'A');
-        await expect(itemBox(page, 0)).toBeVisible();
+        await expect(emptyItemInput(page, 0)).toBeVisible();
+        await expect(itemBox(page, 0)).toBeHidden();
         await expect(itemFrame(page, 0).locator('html')).toHaveClass(/item-is-current/);
         await page.keyboard.press('Enter');
-        await expect(itemBox(page, 0)).toBeFocused();
+        await expect(emptyItemInput(page, 0)).toBeFocused();
     });
 
     test('13. each way to select an item marks its whole query', async ({page}) => {
@@ -578,7 +579,7 @@ test.describe('WORKSPACE keyboard navigation', () => {
             await press(page, key, 2, 'C');
         }
         await page.keyboard.press('Enter');
-        await expect(itemBox(page, 2)).toBeFocused();
+        await expect(emptyItemInput(page, 2)).toBeFocused();
     });
 
     test('T on a whole query goes to the title, and the label follows title and query', async ({page}) => {

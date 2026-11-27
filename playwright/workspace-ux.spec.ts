@@ -1,7 +1,7 @@
 // @ts-check
 import {test, expect, type Page} from './base-test';
 import {
-    answerUnfinishedEdit, captureAlerts, enterItemQuery, enterItemTitle, enterQuery, itemBox, itemFrame, itemQuery, linkQueries, linkTitles,
+    answerUnfinishedEdit, captureAlerts, emptyItemInput, enterItemQuery, enterItemTitle, enterQuery, itemBox, itemFrame, itemQuery, linkQueries, linkTitles,
     openItemBox, openWorkspace, removalPrompts, stableMiddle, titleField, waitForItems, workspaceItem, workspaceItems,
 } from './helpers';
 
@@ -513,7 +513,7 @@ test.describe('WORKSPACE Clear query', () => {
         await button(page, 'Clear query A').click();
         await expect.poll(() => linkQueries(page)).toEqual(['', B.query, C.query]);
         await button(page, 'Expand query 1').click();
-        await expect(itemBox(page, 0)).toBeVisible();
+        await expect(emptyItemInput(page, 0)).toBeVisible();
     });
 
     test('it works while typing in the query box', async ({page}) => {
@@ -537,7 +537,7 @@ test.describe('WORKSPACE Clear query', () => {
         await button(page, 'Clear query C').click();
         await answerUnfinishedEdit(page, 'Discard edit', 'Query B has an unfinished edit.');
         await answerUnfinishedEdit(page, 'Discard edit', 'Query C has an unfinished edit.');
-        await expect(itemFrame(page, 2).locator('#dynamic-input')).toHaveCount(0);
+        await expect(emptyItemInput(page, 2)).toHaveValue('');
         await expect(itemFrame(page, 1).locator('#dynamic-input')).toHaveCount(0);
         await expect.poll(() => page.evaluate('editMode')).toBe(false);
         await expect.poll(() => linkQueries(page)).toEqual([A.query, B.query, '']);
@@ -742,6 +742,7 @@ test.describe('WORKSPACE query box', () => {
         await page.goto('/workspace/');
         await waitForItems(page, 1);
         await openItemBox(page, 0);
+        await itemBox(page, 0).fill('');
         await page.keyboard.type('(heart OR lung)');
         await expect(itemBox(page, 0)).toBeVisible();
         await expect(visual(page, 0)).toHaveText('(heart OR lung)');
@@ -756,7 +757,7 @@ test.describe('WORKSPACE query box', () => {
         await waitForItems(page, 2);
         await expect(itemBox(page, 0)).toBeHidden();
         await expect(visual(page, 0)).toBeVisible();
-        await expect(itemBox(page, 1)).toBeVisible();
+        await expect(emptyItemInput(page, 1)).toBeVisible();
 
         await button(page, 'Edit query 1').click();
         await expect(itemBox(page, 0)).toBeFocused();
@@ -781,12 +782,13 @@ test.describe('WORKSPACE query box', () => {
         await expect(itemBox(page, 0)).toBeHidden();
     });
 
-    test('clearing the query shows the box', async ({page}) => {
+    test('clearing the query shows the input of an empty item', async ({page}) => {
         await openWorkspace(page, [A]);
         await expect(itemBox(page, 0)).toBeHidden();
         await button(page, 'Clear query A').click();
-        await expect(itemBox(page, 0)).toBeVisible();
-        await expect(visual(page, 0)).toBeHidden();
+        await expect(emptyItemInput(page, 0)).toBeVisible();
+        await expect(itemBox(page, 0)).toBeHidden();
+        await expect(visual(page, 0).locator('#search-string *')).toHaveCount(0);
     });
 });
 
@@ -814,13 +816,29 @@ test.describe('WORKSPACE style', () => {
         }
     });
 
-    test('19./20. Dark mode: page and items are dark, the visualisation white, a direct EDITOR unchanged', async ({page}) => {
+    test('19./20. Dark mode: page, items and visualisation are dark, a direct EDITOR unchanged', async ({page}) => {
         await openWorkspace(page, [A]);
         await expect(page.locator('body')).toHaveCSS('background-color', 'rgb(211, 211, 211)');
         await page.emulateMedia({colorScheme: 'dark'});
         await expect(page.locator('body')).toHaveCSS('background-color', 'rgb(38, 39, 43)');
         await expect(itemFrame(page, 0).locator('body')).toHaveCSS('background-color', 'rgb(38, 39, 43)');
-        await expect(visual(page, 0)).toHaveCSS('background-color', 'rgb(255, 255, 255)');
+
+        // Dark paper, with light text and lighter syntax colours; a hovered scope keeps dark text on orange.
+        const paper = 'rgb(27, 28, 31)';
+        await expect(visual(page, 0)).toHaveCSS('background-color', paper);
+        await expect(visual(page, 0).locator('.search-string')).toHaveCSS('background-color', paper);
+        const lung = visual(page, 0).locator('.term', {hasText: 'lung'});
+        await expect(lung).toHaveCSS('color', 'rgb(238, 238, 238)');
+        await expect(visual(page, 0).locator('.boolean', {hasText: 'AND'})).toHaveCSS('color', 'rgb(159, 179, 255)');
+        await lung.hover();
+        await expect(lung).toHaveCSS('background-color', 'rgb(255, 165, 0)');
+        await expect(lung).toHaveCSS('color', 'rgb(17, 17, 17)');
+
+        // The input of an empty item is on the same dark paper.
+        await button(page, '+ Add query after 1').click();
+        await waitForItems(page, 2);
+        await expect(emptyItemInput(page, 1)).toHaveCSS('background-color', paper);
+        await expect(emptyItemInput(page, 1)).toHaveCSS('color', 'rgb(238, 238, 238)');
 
         await page.goto('/index.html');
         await enterQuery(page, A.query);
@@ -864,7 +882,8 @@ test.describe('WORKSPACE colour switch', () => {
             await expect(itemFrame(page, n).locator('html')).toHaveAttribute('data-theme', theme);
             await expect(itemFrame(page, n).locator('body')).toHaveCSS('background-color',
                 theme === 'dark' ? 'rgb(38, 39, 43)' : 'rgb(211, 211, 211)');
-            await expect(visual(page, n)).toHaveCSS('background-color', 'rgb(255, 255, 255)');
+            await expect(visual(page, n)).toHaveCSS('background-color',
+                theme === 'dark' ? 'rgb(27, 28, 31)' : 'rgb(255, 255, 255)');
         }
     }
 

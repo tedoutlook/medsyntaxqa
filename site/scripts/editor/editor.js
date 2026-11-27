@@ -12,8 +12,9 @@ $(document).ready(function () {
     $(document).click(function (event) {
         const $target = $(event.target);
         // Not in the dialog about an unfinished edit (unfinished-edit.js): it decides about the edit.
+        // Nor for the input of an empty item (item.js) with nothing typed: there is nothing to cancel.
         if (!$target.closest('#dynamic-input, #unfinished-edit').length &&
-            $('#dynamic-input').is(":visible")) {
+            $('#dynamic-input').is(":visible") && !blankEmptyQueryInput()) {
             syntaxCheck("query-input1", "medsyntax-target1", true);
             // console.log("click");
         }
@@ -925,26 +926,40 @@ function startScopeEdit(scope) {
 
     const text = scope.text();
     scope.wrapAll("<div class='newInputTarget' />");
-    $(".medsyntax-target .newInputTarget")
-        .replaceWith('<textarea id="dynamic-input" class="dynamic-input"' +
-            ' onfocusin="setEditMode(true)" onfocusout="setEditMode(false)"/>');
+    const input = createDynamicInput(text);
+    $(".medsyntax-target .newInputTarget").replaceWith(input);
+    textAreaAdjust(input, true, medsyntaxTargetWidth);
+    input.focus();
+}
 
-    $("#dynamic-input").val(text);
-    $("#dynamic-input").on('keydown', function (e) {
+// The input of an empty item in the WORKSPACE (item.js), with nothing typed in it
+function blankEmptyQueryInput() {
+    const input = document.getElementById('dynamic-input');
+    return Boolean(input && input.classList.contains('empty-query-input') && input.value.trim() === '');
+}
+
+// The dynamic input of a scope edit, holding text: Enter confirms it (onEnterDynamicInput). Not yet in the
+// page; size it with textAreaAdjust once it is.
+function createDynamicInput(text) {
+    const input = $('<textarea id="dynamic-input" class="dynamic-input"' +
+        ' onfocusin="setEditMode(true)" onfocusout="setEditMode(false)"/>')[0];
+    input.value = text;
+    $(input).on('keydown', function (e) {
         if (e.key === 'Enter') {
             onEnterDynamicInput();
         }
     });
-
-    const input = document.getElementById("dynamic-input");
     input.addEventListener("keyup", function () {
         textAreaAdjust(this, true, medsyntaxTargetWidth);
     });
-    textAreaAdjust(input, true, medsyntaxTargetWidth);
-    input.focus()
+    return input;
 }
 
 function onEnterDynamicInput() {
+    if (blankEmptyQueryInput()) {
+        return false; // nothing to enter
+    }
+    const emptyItem = $("#dynamic-input").hasClass('empty-query-input');
     const dyText = $("#dynamic-input").val();
     $("#dynamic-input").val(dyText.replace(/\n/g, ' '));
     $("#dynamic-input").append('<div id="entered-text">' + " " + $("#dynamic-input").val() + " " + '</div>');
@@ -1006,6 +1021,9 @@ function onEnterDynamicInput() {
     }
 
     str = str.replace(/  +/g, ' ');
+    if (emptyItem) {
+        str = str.trim(); // it is the whole query
+    }
     $("#query-input1").val(str);
     syntaxCheck("query-input1", "medsyntax-target1", true);
     return true;

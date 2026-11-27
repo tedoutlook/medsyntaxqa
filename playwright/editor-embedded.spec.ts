@@ -9,6 +9,9 @@ import {enterQuery, queryBox} from './helpers';
 
 type Message = {status: string, type: string, payload: unknown};
 
+// The input of an empty item: the input of a scope edit, instead of the query box (item.js).
+const emptyInput = (page: Page) => page.locator('#dynamic-input.empty-query-input');
+
 const messages = (page: Page): Promise<Message[]> =>
     page.evaluate(() => (window as any).messages.filter((m: unknown) => typeof m === 'object'));
 
@@ -36,18 +39,20 @@ test.describe('EDITOR embedded mode (?ws=1)', () => {
             {status: 'success', type: 'setEditMode', payload: false});
     });
 
-    test('tells the workspace when the query box gains and loses focus', async ({page}) => {
-        await queryBox(page).focus();
+    test('tells the workspace when the input of the empty item gains and loses focus', async ({page}) => {
+        await expect(queryBox(page)).toBeHidden();
+        await emptyInput(page).focus();
         await expect.poll(async () => (await messages(page)).at(-1)).toEqual(
             {status: 'success', type: 'setEditMode', payload: true});
 
-        await queryBox(page).blur();
+        await emptyInput(page).blur();
         await expect.poll(async () => (await messages(page)).at(-1)).toEqual(
             {status: 'success', type: 'setEditMode', payload: false});
     });
 
     test('sends its link (without ws) to the workspace when the query changes', async ({page}) => {
-        await enterQuery(page, 'heart AND lung');
+        await emptyInput(page).fill('heart AND lung');
+        await emptyInput(page).press('Enter');
 
         await expect.poll(async () => (await messages(page)).filter((m) => m.type === 'updateUrl').length)
             .toBeGreaterThan(0);

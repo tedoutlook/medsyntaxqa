@@ -333,7 +333,8 @@ function settleScopeEdit(choice) {
         syntaxCheck('query-input1', 'medsyntax-target1', true);
     }
     const input = document.getElementById('dynamic-input');
-    if (input) {
+    // A discarded edit of an empty item leaves its blank input (item.js): the edit is closed.
+    if (input && !blankEmptyQueryInput()) {
         window.focus();
         input.focus();
         return false;
@@ -345,8 +346,9 @@ function settleScopeEdit(choice) {
 function onScopeEditKey(event) {
     if (event.key === 'Enter') {
         event.preventDefault();
-        if (document.getElementById('dynamic-input')) {
-            document.getElementById('dynamic-input').focus(); // invalid: keep editing
+        // Still the same input: invalid, keep editing. A new one is that of an item the edit emptied (item.js).
+        if (document.getElementById('dynamic-input') === event.target) {
+            event.target.focus();
         } else {
             endScopeEdit();
         }
