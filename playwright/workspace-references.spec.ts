@@ -1,7 +1,7 @@
 // @ts-check
 import {test, expect, type Page} from './base-test';
 import {
-    captureAlerts, enterItemQuery, enterItemTitle, itemBox, itemFrame, itemQuery, linkQueries, linkTitles,
+    answerUnfinishedEdit, captureAlerts, enterItemQuery, enterItemTitle, itemBox, itemFrame, itemQuery, linkQueries, linkTitles,
     normalise, openItemBox, openWorkspace, titleField, waitForItems, workspaceItem, workspaceItems,
 } from './helpers';
 
@@ -633,25 +633,24 @@ test.describe('References: an open scope edit (R2)', () => {
     const cursor = (page: Page, n: number) => dynamicInput(page, n)
         .evaluate((input: HTMLTextAreaElement) => [input.selectionStart, input.selectionEnd]);
 
-    for (const [key, query] of [['Enter', '#2 OR #1 OR x'], ['Escape', '#2 OR #1']]) {
-        test(`S1/S3. of the whole query: it stays open with the new numbers, then ${key}`, async ({page}) => {
+    // A button first settles an open scope edit (unfinished-edit.js): Accept as Enter, Discard as Escape. The
+    // change of items then renumbers the result.
+    for (const [choice, query] of [['Accept edit', '#2 OR #1 OR x'], ['Discard edit', '#2 OR #1']] as const) {
+        test(`S1/S3. of the whole query, then ${choice} and the move`, async ({page}) => {
             await openWorkspace(page, base);
             await edit(page, 2);
             await page.keyboard.press('End');
             await page.keyboard.type(' OR x');
             await clickNow(page, 0, 'down');
-            await expect(dynamicInput(page, 2)).toHaveValue('#2 OR #1 OR x');
-            expect(await cursor(page, 2)).toEqual([13, 13]);
-            await dynamicInput(page, 2).focus();
-            await page.keyboard.press(key);
+            await answerUnfinishedEdit(page, choice, 'Query C has an unfinished edit.');
             await expect(dynamicInput(page, 2)).toHaveCount(0);
             await waitForItems(page, 4);
             await expectQueriesAndReload(page, ['bb', 'aa', query, '#3 AND #2']);
         });
     }
 
-    for (const [key, first] of [['Enter', '#2 OR #1'], ['Escape', 'cc OR #1']]) {
-        test(`S2/S3. of a part, with references around it and a new one in it, then ${key}`, async ({page}) => {
+    for (const [choice, first] of [['Accept edit', '#2 OR #1'], ['Discard edit', 'cc OR #1']] as const) {
+        test(`S2/S3. of a part, with references around it and a new one in it, then ${choice} and the move`, async ({page}) => {
             await openWorkspace(page, [...base.slice(0, 2), {title: 'C', query: '(cc OR #2) AND #1 AND #2'}]);
             await page.keyboard.press('3');
             await expect(itemFrame(page, 2).locator('[role=treeitem][aria-level="1"]')).toBeFocused();
@@ -661,44 +660,42 @@ test.describe('References: an open scope edit (R2)', () => {
             await page.keyboard.press('Enter');
             await dynamicInput(page, 2).fill('(#1 OR #2)');
             await clickNow(page, 1, 'up');
-            await expect(dynamicInput(page, 2)).toHaveValue('(#2 OR #1)');
-            await dynamicInput(page, 2).focus();
-            await page.keyboard.press(key);
+            await answerUnfinishedEdit(page, choice);
             await waitForItems(page, 3);
             await expectQueriesAndReload(page, ['bb', 'aa', `(${first}) AND #2 AND #1`]);
         });
     }
 
-    test('S4. with an unfinished reference and bracket it stays open, and Enter still alerts', async ({page}) => {
+    test('S4. with an unfinished reference and bracket, Accept alerts and nothing moves', async ({page}) => {
         const alerts = captureAlerts(page);
         await openWorkspace(page, base);
         await edit(page, 2);
         await dynamicInput(page, 2).fill('(#1 OR # OR #2');
         await clickNow(page, 0, 'down');
-        await expect(dynamicInput(page, 2)).toHaveValue('(#2 OR # OR #1');
-        await dynamicInput(page, 2).focus();
-        await page.keyboard.press('Enter');
+        await answerUnfinishedEdit(page, 'Accept edit');
         await expect.poll(() => alerts.length).toBe(1);
-        await expect(dynamicInput(page, 2)).toHaveValue('(#2 OR # OR #1');
-        await page.keyboard.press('Escape');
+        await expect(dynamicInput(page, 2)).toBeFocused();
+        await expect(dynamicInput(page, 2)).toHaveValue('(#1 OR # OR #2');
+        expect((await linkQueries(page)).map(tidy)).toEqual(base.map(({query}) => query));
+        await clickNow(page, 0, 'down');
+        await answerUnfinishedEdit(page, 'Discard edit');
         await waitForItems(page, 4);
         await expectQueries(page, ['bb', 'aa', '#2 OR #1', '#3 AND #2']);
     });
 
-    test('S5. remove the referenced item while the edit is open, and Undo', async ({page}) => {
+    test('S5. remove the referenced item after the edit is settled, and Undo', async ({page}) => {
         await openWorkspace(page, base);
         await edit(page, 2);
         await clickNow(page, 1, 'remove');
-        await expect(dynamicInput(page, 1)).toHaveValue('#1 OR #2?');
+        await answerUnfinishedEdit(page, 'Accept edit');
+        await expect(dynamicInput(page, 1)).toHaveCount(0);
+        await expectQueries(page, ['aa', '#1 OR #2?', '#2 AND #1']);
         await page.evaluate(() => document.getElementById('undo-button')!.click());
-        await expect(dynamicInput(page, 2)).toHaveValue('#1 OR #2');
-        await dynamicInput(page, 2).focus();
-        await page.keyboard.press('Enter');
         await waitForItems(page, 4);
         await expectQueriesAndReload(page, base.map(({query}) => query), ['aa', 'bb', fullC, fullD]);
     });
 
-    test('S6. edits open in two items', async ({page}) => {
+    test('S6. edits open in two items are asked about in turn; Keep editing stops', async ({page}) => {
         await openWorkspace(page, base);
         for (const n of [2, 3]) {
             await itemFrame(page, n).locator('html').evaluate(() => {
@@ -707,22 +704,24 @@ test.describe('References: an open scope edit (R2)', () => {
             await expect(dynamicInput(page, n)).toBeVisible();
         }
         await clickNow(page, 0, 'down');
-        await expect(dynamicInput(page, 2)).toHaveValue('#2 OR #1');
-        await expect(dynamicInput(page, 3)).toHaveValue('#3 AND #2');
-        for (const n of [2, 3]) {
-            await dynamicInput(page, n).focus();
-            await page.keyboard.press('Enter');
-            await expect(dynamicInput(page, n)).toHaveCount(0);
-        }
+        await answerUnfinishedEdit(page, 'Accept edit', 'Query C has an unfinished edit.');
+        await answerUnfinishedEdit(page, 'Keep editing', 'Query D has an unfinished edit.');
+        await expect(dynamicInput(page, 2)).toHaveCount(0);
+        await expect(dynamicInput(page, 3)).toBeFocused();
+        expect((await linkQueries(page)).map(tidy)).toEqual(base.map(({query}) => query));
+        await clickNow(page, 0, 'down');
+        await answerUnfinishedEdit(page, 'Accept edit', 'Query D has an unfinished edit.');
+        await expect(dynamicInput(page, 3)).toHaveCount(0);
         await waitForItems(page, 4);
         await expectQueriesAndReload(page, ['bb', 'aa', '#2 OR #1', '#3 AND #2'], [null, null, fullC, fullD]);
     });
 
-    test('S7. moving the item itself closes its edit, with the new numbers', async ({page}) => {
+    test('S7. moving the item itself, after Discard, with the new numbers', async ({page}) => {
         await openWorkspace(page, base);
         await edit(page, 2);
         await page.keyboard.type('zzz');
         await clickNow(page, 2, 'up');
+        await answerUnfinishedEdit(page, 'Discard edit');
         await waitForItems(page, 4);
         await expect(dynamicInput(page, 1)).toHaveCount(0);
         await expectQueriesAndReload(page, ['aa', '#1 OR #3', 'bb', '#2 AND #1']);

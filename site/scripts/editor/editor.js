@@ -11,7 +11,8 @@ const ws = new URLSearchParams(window.location.search).get('ws');
 $(document).ready(function () {
     $(document).click(function (event) {
         const $target = $(event.target);
-        if (!$target.closest('#dynamic-input').length &&
+        // Not in the dialog about an unfinished edit (unfinished-edit.js): it decides about the edit.
+        if (!$target.closest('#dynamic-input, #unfinished-edit').length &&
             $('#dynamic-input').is(":visible")) {
             syntaxCheck("query-input1", "medsyntax-target1", true);
             // console.log("click");
@@ -1007,4 +1008,5 @@ function onEnterDynamicInput() {
     str = str.replace(/  +/g, ' ');
     $("#query-input1").val(str);
     syntaxCheck("query-input1", "medsyntax-target1", true);
+    return true;
 }

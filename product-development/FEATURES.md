@@ -30,6 +30,7 @@ Medsyntax is a syntax assistant for (medical) search engine queries with a scope
 - Hover over the visualisation to pick the scope of an edit (highlighted)
 - Click to open a dynamic input field for that scope
 - `Enter` confirms the edit; clicking outside cancels it
+- A button pressed while a scope edit is open first asks about it: Accept edit, Discard edit or Keep editing (`unfinished-edit.js`; in the WORKSPACE for every item with an open edit)
 - Animated demo GIF and quick guide in the help modal
 
 ## Sharing
@@ -98,7 +99,7 @@ Not covered by the WORKSPACE's references between items (REF in `product-develop
 - [ ] `#` numbers that aren't seen as references (`#1[tiab]`, ranges as `#1-#3`) are not rewritten, so they silently point to the wrong line after a move
 - [ ] In existing links, and in a strategy pasted from elsewhere, `#1` means item 1, also if it meant another line. A strategy pasted below other items refers to the wrong ones
 - [ ] The browser's own undo (Cmd/Ctrl+Z) in a query box or scope edit may not work well after a rewrite, and can bring old numbers back (not tested)
-- [ ] Moving an item closes the scope edit open in it, and loses what wasn't confirmed (already so before references)
+- [x] Moving an item closed the scope edit open in it, and lost what wasn't confirmed: every button now asks about open edits first (ITEM-9)
 - [ ] Once Undo is no longer possible, a missing reference (`#2?`) can only be retyped
 - [ ] Copy full query doesn't check the combined query against a database: length limits and field syntax can still make it invalid
 - [ ] A chip's tooltip can't be reached with the keyboard, and only its number and colour link it to its card. Not tested with a real screen reader

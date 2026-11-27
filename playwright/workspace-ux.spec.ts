@@ -1,7 +1,7 @@
 // @ts-check
 import {test, expect, type Page} from './base-test';
 import {
-    captureAlerts, enterItemQuery, enterItemTitle, enterQuery, itemBox, itemFrame, itemQuery, linkQueries, linkTitles,
+    answerUnfinishedEdit, captureAlerts, enterItemQuery, enterItemTitle, enterQuery, itemBox, itemFrame, itemQuery, linkQueries, linkTitles,
     openItemBox, openWorkspace, removalPrompts, stableMiddle, titleField, waitForItems, workspaceItem, workspaceItems,
 } from './helpers';
 
@@ -215,18 +215,32 @@ test.describe('WORKSPACE managing items', () => {
         await expect.poll(() => linkQueries(page)).toEqual(['']);
     });
 
-    test('13. An unfinished edit in another item stays open', async ({page}) => {
+    test('13. An unfinished edit in another item is settled first', async ({page}) => {
         const term = visual(page, 2).locator('.quote-term');
         await term.hover();
         await term.click();
         await expect(itemFrame(page, 2).locator('#dynamic-input')).toBeVisible();
         await button(page, 'Move down query 1').click();
+        await answerUnfinishedEdit(page, 'Keep editing', 'Query C has an unfinished edit.');
+        await expect(itemFrame(page, 2).locator('#dynamic-input')).toBeFocused();
+        expect(await titles(page)).toEqual(['A', 'B', 'C']);
+        await button(page, 'Move down query 1').click();
+        await answerUnfinishedEdit(page, 'Discard edit');
         await expect.poll(() => titles(page)).toEqual(['B', 'A', 'C']);
-        await expect(itemFrame(page, 2).locator('#dynamic-input')).toBeVisible();
-        await button(page, 'Remove query 1').click();
-        await expect(itemFrame(page, 1).locator('#dynamic-input')).toBeVisible();
-        await button(page, 'Duplicate query 1').click();
-        await expect(itemFrame(page, 2).locator('#dynamic-input')).toBeVisible();
+        await expect(itemFrame(page, 2).locator('#dynamic-input')).toHaveCount(0);
+        await expect(visual(page, 2)).toHaveText(C.query);
+    });
+
+    test('Add at the top, with an edit open, first accepts it', async ({page}) => {
+        const term = visual(page, 0).locator('.term').first();
+        await term.hover();
+        await term.click();
+        await itemFrame(page, 0).locator('#dynamic-input').fill('(kidney OR renal)');
+        await button(page, '+ Add query at the top').click();
+        await answerUnfinishedEdit(page, 'Accept edit', 'Query A has an unfinished edit.');
+        await waitForItems(page, 4);
+        await expect.poll(async () => (await linkQueries(page)).map((q) => q.trim()))
+            .toEqual(['', '(kidney OR renal) AND lung', B.query, C.query]);
     });
 
     test('actions and edits add nothing to the browser history', async ({page}) => {
@@ -513,7 +527,7 @@ test.describe('WORKSPACE Clear query', () => {
         await expect(visual(page, 0)).toHaveText('kidney');
     });
 
-    test('it drops an unfinished scope edit, only in that item', async ({page}) => {
+    test('it first settles the unfinished scope edits, in every item', async ({page}) => {
         for (const n of [1, 2]) {
             const term = visual(page, n).locator(n === 1 ? '.term' : '.quote-term').first();
             await term.hover();
@@ -521,9 +535,12 @@ test.describe('WORKSPACE Clear query', () => {
             await expect(itemFrame(page, n).locator('#dynamic-input')).toBeVisible();
         }
         await button(page, 'Clear query C').click();
+        await answerUnfinishedEdit(page, 'Discard edit', 'Query B has an unfinished edit.');
+        await answerUnfinishedEdit(page, 'Discard edit', 'Query C has an unfinished edit.');
         await expect(itemFrame(page, 2).locator('#dynamic-input')).toHaveCount(0);
+        await expect(itemFrame(page, 1).locator('#dynamic-input')).toHaveCount(0);
         await expect.poll(() => page.evaluate('editMode')).toBe(false);
-        await expect(itemFrame(page, 1).locator('#dynamic-input')).toBeVisible();
+        await expect.poll(() => linkQueries(page)).toEqual([A.query, B.query, '']);
         await enterItemQuery(page, 2, 'kidney');
         await expect(visual(page, 2)).toHaveText('kidney');
     });
